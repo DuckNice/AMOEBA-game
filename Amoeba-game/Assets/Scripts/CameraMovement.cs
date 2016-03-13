@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour {
     {
         if (_cameraCanMove)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 _dragOrigin = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
 
@@ -23,7 +23,7 @@ public class CameraMovement : MonoBehaviour {
                 _dragMidOrigin = Camera.main.ScreenToWorldPoint(new Vector3(go.x, go.y, _heightAboveMap));
                 _1pixelDistance = Camera.main.ScreenToWorldPoint(new Vector3((go.x) + 1, (go.y) + 1, _heightAboveMap)) - _dragMidOrigin;
             }
-            else if (Input.GetMouseButton(0))
+            else if (Input.GetMouseButton(1))
             {
                 _cameraMoving = true;
                 Vector2 _newposition = new Vector2(Input.mousePosition.x - _dragOrigin.x, Input.mousePosition.y - _dragOrigin.y);

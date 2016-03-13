@@ -1,15 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class AMOEBA : MonoBehaviour {
+    [SerializeField]
+    bool _isPlayer;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private Vector2 _currentTargetPosition;
+    float _speed;
+
+    void Update()
+    {
+        if(_isPlayer)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                _currentTargetPosition = 
+            }
+        }
+    }
+
+
+    void FixedUpdate()
+    {
+        if()
+        {
+
+        }
+    }
 }

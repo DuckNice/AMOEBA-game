@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EmotionGenerator : MonoBehaviour {
+    public string CharacterName;
     [SerializeField]
     [Tooltip("The max distance distance to a target connections are shown at")]
     protected float _connectionDistance = 2;

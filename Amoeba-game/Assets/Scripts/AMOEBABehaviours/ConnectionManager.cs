@@ -1,18 +1,23 @@
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour {
-    protected GameObject _otherEmotion;
+    protected GameObject _otherEmotionGO;
     protected EmotionGenerator _otherGenerator;
     protected EmotionGenerator _owner;
+    protected Emotion _thisEmotion;
+    protected Emotion _otherEmotion;
     protected LineRenderer line;
 
 
     public static ConnectionManager CreateComponent(GameObject where, GameObject otherEmotion, EmotionGenerator owner, EmotionGenerator otherGenerator)
     {
         ConnectionManager myC = where.AddComponent<ConnectionManager>();
-        myC._otherEmotion = otherEmotion;
+        myC._otherEmotionGO = otherEmotion;
         myC._otherGenerator = otherGenerator;
         myC._owner = owner;
+
+        Emotion.CreateComponent(myC.gameObject, owner);
+        Emotion.CreateComponent(otherEmotion.gameObject, otherGenerator);
         
         myC.CreateLineRenderer();
 
@@ -37,7 +42,7 @@ public class ConnectionManager : MonoBehaviour {
         {
             if(_owner.TerminateConnection(_otherGenerator))
             {
-                Destroy(_otherEmotion);
+                Destroy(_otherEmotionGO);
                 Destroy(gameObject);
             }
         }
@@ -48,7 +53,7 @@ public class ConnectionManager : MonoBehaviour {
     {
         Vector3[] poss = new Vector3[2];
         poss[0] = transform.position;
-        poss[1] = _otherEmotion.transform.position;
+        poss[1] = _otherEmotionGO.transform.position;
 
         line.SetPositions(poss);
     }

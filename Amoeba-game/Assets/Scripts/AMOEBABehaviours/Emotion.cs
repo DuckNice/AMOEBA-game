@@ -31,12 +31,12 @@ public class Emotion : MonoBehaviour {
 
         if(Mathf.Abs(emotion - lastEmotion) > 0.01f)
         {
-            _renderer.sprite = GameManager.Instance.Shapes[0];
+            _renderer.sprite = GameManager.Instance.Shapes[2];
         }
 
         if(Mathf.Abs(value - lastvalue) > 0.01f)
         {
-            _renderer.color = GameManager.Instance.Colors[0] * value;
+            _renderer.color = GameManager.Instance.Colors[0] * new Color(0.5f,0.5f,0.5f,1);
         }
     }
 }

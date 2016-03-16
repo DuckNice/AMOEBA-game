@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Emotion : MonoBehaviour {
     SpriteRenderer _renderer;
@@ -21,22 +20,21 @@ public class Emotion : MonoBehaviour {
 
         return myC;
     }
-
-
+    public float value = -0.7f;
 
     void Update()
     {
         float emotion = 1;
-        float value = 0.5f;
 
         if(Mathf.Abs(emotion - lastEmotion) > 0.01f)
         {
             _renderer.sprite = GameManager.Instance.Shapes[2];
         }
 
-        if(Mathf.Abs(value - lastvalue) > 0.01f)
+    //    if(Mathf.Abs(value - lastvalue) > 0.01f)
         {
-            _renderer.color = GameManager.Instance.Colors[0] * new Color(0.5f,0.5f,0.5f,1);
+            _renderer.color = (value < 0) ? Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.NegativeColor, Mathf.Abs(value)) : 
+                                            Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.PositiveColor, value);
         }
     }
 }

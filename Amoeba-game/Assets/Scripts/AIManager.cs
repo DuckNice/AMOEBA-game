@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using NMoodyMaskSystem;
 
 public class AIManager : MonoBehaviour {

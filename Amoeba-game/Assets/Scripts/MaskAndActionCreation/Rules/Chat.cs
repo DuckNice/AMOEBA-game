@@ -1,24 +1,24 @@
-﻿using NMoodyMaskSystem;
+using NMoodyMaskSystem;
 
-public static class Console
+public static class Chat
 {
     public static ActionInfo BuildActionInfo(MoodyMaskSystem MoodyMask)
-    {
+    {		
         //--------------------------------------------------Implementation
-        ActionInvoker Console = (subject, direct, indPpl, misc) =>
+        ActionInvoker Chat = (subject, direct, indPpl, misc) =>
         {
             direct.Moods[MoodTypes.energTired] += Calculator.UnboundAdd(-0.1f, direct.Moods[MoodTypes.energTired]);
             subject.Moods[MoodTypes.energTired] += Calculator.UnboundAdd(-0.1f, subject.Moods[MoodTypes.energTired]);
         };
 
-        MoodyMask.AddAction(new MAction("console", 0.0f, 0.0f, MoodyMask, Console, 10f));
+        MoodyMask.AddAction(new MAction("chat", 0.0f, 0.0f, MoodyMask, Chat, 10f));
 
         //--------------------------------------------------Condition
-        RuleConditioner ConsoleCondition = (self, other, indPpl) =>
+        RuleConditioner ChatCondition = (self, other, indPpl) =>
         {
             if (self != other)
             { //LvlOfInfl0.2
-                if (other.Moods[MoodTypes.energTired] > -0.6)
+                if (self.Moods[MoodTypes.energTired] > -0.6)
                 {
                     return true;
                 }
@@ -27,12 +27,12 @@ public static class Console
         };
 
         //--------------------------------------------------Preference
-        RulePreference ConsolePreference = (self, other) => {
+        RulePreference ChatPreference = (self, other) => {
             return Calculator.UnboundAdd(self.GetOpinionValue(TraitTypes.NiceNasty, other), self.GetOpinionValue(TraitTypes.HonestFalse, other)); //LVLOFINFL
         };
 
         //--------------------------------------------------ActionInfo
 
-        return new ActionInfo(Console, ConsoleCondition, ConsolePreference);
+        return new ActionInfo(Chat, ChatCondition, ChatPreference);
     }
 }

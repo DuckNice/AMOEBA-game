@@ -7,12 +7,5 @@ public class AIManager : MonoBehaviour {
     void Awake()
     {
         MoodyMask = new MoodyMaskSystem();
-
-
-    }
-
-    void Start()
-    {
-
     }
 }

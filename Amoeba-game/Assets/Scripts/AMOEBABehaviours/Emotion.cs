@@ -6,7 +6,7 @@ public class Emotion : MonoBehaviour {
     string _charName;
 #pragma warning restore 0414
     float lastvalue = 0f;
-    float lastEmotion = 0.5f;
+    float _hapSad, _arousDisgus, _angryFear, _energTired = 0.0f;
 
     void Awake()
     {
@@ -24,16 +24,13 @@ public class Emotion : MonoBehaviour {
         return myC;
     }
 
-    void Update()
+    public void UpdateEmotion(float hapSad, float arousDisgus, float angryFear, float energTired)
     {
-        float emotion = 1;
         float value = -0.7f;
 
-        if (Mathf.Abs(emotion - lastEmotion) > 0.01f)
+        if (Mathf.Abs(hapSad - _hapSad) > 0.05f)
         {
-            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.Shape, 130, 120, 2, 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
-
-        //    _renderer.sprite = GameManager.Instance.Shapes[2];
+            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.ShapeSheet, 97, 97, (int)(hapSad * GameManager.FramesInEmotionSheet), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
         }
 
         if(Mathf.Abs(value - lastvalue) > 0.01f)

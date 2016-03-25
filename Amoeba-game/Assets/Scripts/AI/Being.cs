@@ -9,9 +9,6 @@ public class Being : MonoBehaviour
 {
 	public static List<Being> Beings { get; private set;}
 
-    [Header("References")]
-    public static MoodyMaskSystem MoodyMask;
-
     [Header("Info")]
 	public string Name;
 	public bool IsPlayer;
@@ -47,7 +44,7 @@ public class Being : MonoBehaviour
     public Dictionary<string, float> PersonalRules;
     public MaskInfo[] CultureMasks;
     public InterPersonInfo[] InterPersons;
-
+    public Opinion[] Opinion;
 
     [System.Serializable]
 	public struct MaskInfo
@@ -114,7 +111,7 @@ public class Being : MonoBehaviour
 	{
 		if(IsPlayer)
 		{
-			MoodyMask.PlayerName.Add (Name);
+			GameManager.AIManager.MoodyMask.PlayerName.Add (Name);
 		}
 
 		if (Beings == null)
@@ -126,18 +123,18 @@ public class Being : MonoBehaviour
 
 		foreach (string list in UpdateLists)
 		{
-			MoodyMask.AddUpdateList(list.ToLower());
-			MoodyMask.AddListToActives(list.ToLower());
-			MoodyMask.AddPersonToUpdateList (list.ToLower(), MoodyMask.GetPerson (Name));
+			GameManager.AIManager.MoodyMask.AddUpdateList(list.ToLower());
+            GameManager.AIManager.MoodyMask.AddListToActives(list.ToLower());
+            GameManager.AIManager.MoodyMask.AddPersonToUpdateList (list.ToLower(), GameManager.AIManager.MoodyMask.GetPerson (Name));
 		}
         
-        NPCCreator.CreatePerson(MoodyMask, Name, CultureMasks, PersonalRules, Rationality, Morality, Impulsivity, 
+        NPCCreator.CreatePerson(GameManager.AIManager.MoodyMask, Name, CultureMasks, PersonalRules, Rationality, Morality, Impulsivity, 
             new []{ NiceNasty, CharitableGreedy, HonestFalse }, 
             new[] { HapSad, ArousDisgus, AngryFear, EnergTired });
 
         foreach (InterPersonInfo interPerson in InterPersons)
 		{
-			StartCoroutine(NPCCreator.SetupInterPerson(MoodyMask, interPerson));
+			StartCoroutine(NPCCreator.SetupInterPerson(GameManager.AIManager.MoodyMask, interPerson));
 		}
 	}
 
@@ -152,9 +149,9 @@ public class Being : MonoBehaviour
     
 	public void NPCAction(float time)
 	{
-		if (!MoodyMask.PlayerName.Contains(Name.ToLower()))
+		if (!GameManager.AIManager.MoodyMask.PlayerName.Contains(Name.ToLower()))
         {
-            Person self = MoodyMask.PplAndMasks.GetPerson(Name);
+            Person self = GameManager.AIManager.MoodyMask.PplAndMasks.GetPerson(Name);
 
             if (CurrentRule != null && ActionStartTime + CurrentRule.ActionToTrigger.Duration > time)
             {

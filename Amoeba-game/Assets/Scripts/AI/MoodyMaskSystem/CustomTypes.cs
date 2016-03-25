@@ -48,6 +48,7 @@ namespace NMoodyMaskSystem
         HonestFalse
     }
 
+    [Serializable]
 	public class Opinion
 	{
 		public TraitTypes Trait;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using NMoodyMaskSystem;
 
 public class EmotionGenerator : MonoBehaviour {
     public string CharacterName;
@@ -21,26 +22,24 @@ public class EmotionGenerator : MonoBehaviour {
     [SerializeField]
     protected GameObject _emotionPrefab;
 
-
+    SpriteRenderer _renderer;
     void Awake()
     {
         _instances.Add(this);
-
-        StartCoroutine(UpdateNotableInstancesLoop());
     }
 
-
-    public void Update()
+    void Start()
     {
-        foreach(EmotionGenerator gen in _notableInstances)
-        {
-            if ((gen.transform.position - transform.position).magnitude < _connectionDistance && !(_connectedInstances.ContainsKey(gen)))
-            {
-                CreateConnection(gen);
-            }
-        }
+        GameObject emotions = new GameObject();
+        _renderer = emotions.AddComponent<SpriteRenderer>();
+        emotions.transform.parent = transform;
+        emotions.transform.localPosition = new Vector3(0, 0, 1);
+        emotions.gameObject.name = "Emotion";
+
+        StartCoroutine(UpdateEmotionsLoop());
+
     }
-    
+
 
     public void CreateConnection(EmotionGenerator other)
     {
@@ -54,7 +53,7 @@ public class EmotionGenerator : MonoBehaviour {
 
             ConnectionManager.CreateComponent(thisEmotion, othersEmotion, this, other);
 
-            thisEmotion.gameObject.name = "EmotionTowards" + other.gameObject.name;
+            thisEmotion.gameObject.name = "OpinionTowards" + other.gameObject.name;
 
             _connectedInstances.Add(other, thisEmotion);
         }
@@ -115,11 +114,29 @@ public class EmotionGenerator : MonoBehaviour {
     }
 
 
-    private IEnumerator UpdateNotableInstancesLoop()
+    private IEnumerator UpdateEmotionsLoop()
     {
         while(true)
         {
             UpdateNotableInstances();
+
+            foreach (EmotionGenerator gen in _notableInstances)
+            {
+                if ((gen.transform.position - transform.position).magnitude < _connectionDistance && !(_connectedInstances.ContainsKey(gen)))
+                {
+                    CreateConnection(gen);
+                }
+            }
+
+            Person person = GameManager.MoodyMask.GetPerson(CharacterName);
+            if (person != null)
+            {
+                UpdateEmotion(person.Moods[MoodTypes.hapSad], person.Moods[MoodTypes.arousDisgus], person.Moods[MoodTypes.angryFear], person.Moods[MoodTypes.energTired]);
+            }
+            else
+            {
+                Debug.LogError("Error: No person with name: '" + CharacterName + "' in PersonContainer. not updating emotion.");
+            }
 
             yield return _waitforO5;
         }
@@ -136,6 +153,23 @@ public class EmotionGenerator : MonoBehaviour {
             {
                 _notableInstances.Add(gen);
             }
+        }
+    }
+
+    float _hapSad, _arousDisgus, _angryFear, _energTired = 0.0f;
+    public void UpdateEmotion(float hapSad, float arousDisgus, float angryFear, float energTired)
+    {
+        float value = -0.7f;
+
+        if (Mathf.Abs(hapSad - _hapSad) > 0.05f)
+        {
+            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.ShapeSheet, 97, 97, (int)(hapSad * GameManager.FramesInEmotionSheet), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
+        }
+
+        if (Mathf.Abs(arousDisgus - _arousDisgus) > 0.01f)
+        {
+            _renderer.color = (value < 0) ? Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.NegativeColor, Mathf.Abs(value)) :
+                                            Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.PositiveColor, value);
         }
     }
 }

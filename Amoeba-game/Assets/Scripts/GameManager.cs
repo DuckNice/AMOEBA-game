@@ -4,23 +4,39 @@ using NMoodyMaskSystem;
 
 public class GameManager : Singleton<GameManager> {
     public static float Time { get; protected set; }
-    //EmotionStuff
-    public Sprite Shape;
-    public Vector2 MinMaxSize = new Vector2(1, 2);
-    public Color NegativeColor;
-    public Color NeutralColor;
-    public Color PositiveColor;
-    public List<Sprite> Shapes = new List<Sprite>();
-    public Material ConnectionMaterial;
     [SerializeField]
     protected AIManager _AIManager;
-    public static AIManager AIManager {
+    public static AIManager AIManager
+    {
         get { return Instance._AIManager; }
     }
     public static MoodyMaskSystem MoodyMask
     {
         get { return Instance._AIManager.MoodyMask; }
     }
+
+
+#region Emotions
+    public Sprite ShapeSheet;
+    [SerializeField]
+    protected float _framesInEmotionSheet = 21;
+    public static float FramesInEmotionSheet { get { return Instance._framesInEmotionSheet; } }
+
+    [SerializeField]
+    protected Vector2 _minMaxEmotionSize = new Vector2(1, 3);
+    public static Vector2 MinMaxEmotionSize { get { return Instance._minMaxEmotionSize; } }
+
+    [SerializeField]
+    protected Vector2 _minMaxEmotionSpeed = new Vector2(1, 3);
+    public static Vector2 MinMaxEmotionSpeed { get { return Instance._minMaxEmotionSpeed; } }
+
+    public Material ConnectionMaterial;
+    public Color NegativeColor;
+    public Color NeutralColor;
+    public Color PositiveColor;
+#endregion
+
+    
 
 
     void Awake()
@@ -33,9 +49,8 @@ public class GameManager : Singleton<GameManager> {
                 _AIManager = gameObject.AddComponent<AIManager>();
             }
         }
-        if (Shape == null || Shapes.Count != 4 ||
-            NegativeColor == default(Color) || NeutralColor == default(Color) || PositiveColor == default(Color) ||
-            MinMaxSize.x <= 0 || MinMaxSize.x > MinMaxSize.y || MinMaxSize.y <= 0 || ConnectionMaterial == null)
+        if (ShapeSheet == null ||
+            NegativeColor == default(Color) || NeutralColor == default(Color) || PositiveColor == default(Color) || ConnectionMaterial == null)
         {
             Debug.LogError("Fatal error: GameManager is not properly setup. Closing Application");
             UnityEditor.EditorApplication.isPlaying = false;

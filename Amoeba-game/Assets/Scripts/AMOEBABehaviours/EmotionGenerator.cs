@@ -156,20 +156,26 @@ public class EmotionGenerator : MonoBehaviour {
         }
     }
 
-    float _hapSad, _arousDisgus, _angryFear, _energTired = 0.0f;
+    float _hapSad = 2.0f, _arousDisgus = 2.0f, _angryFear = 2.0f, _energTired = 2.0f;
     public void UpdateEmotion(float hapSad, float arousDisgus, float angryFear, float energTired)
     {
-        float value = -0.7f;
+        hapSad = (hapSad + 1);
+        hapSad = (hapSad != 0) ? hapSad / 2 : 0;
+        arousDisgus = (arousDisgus + 1);
+        arousDisgus = (arousDisgus != 0) ? arousDisgus / 2 : 0;
 
-        if (Mathf.Abs(hapSad - _hapSad) > 0.05f)
+
+        if (Mathf.Abs(hapSad - _hapSad) > 0.01f)
         {
             AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.ShapeSheet, 97, 97, (int)(hapSad * GameManager.FramesInEmotionSheet), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
+            _hapSad = hapSad;
         }
 
         if (Mathf.Abs(arousDisgus - _arousDisgus) > 0.01f)
         {
-            _renderer.color = (value < 0) ? Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.NegativeColor, Mathf.Abs(value)) :
-                                            Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.PositiveColor, value);
+            _renderer.color = (arousDisgus < 0) ? Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.NegativeColor, Mathf.Abs(arousDisgus)) :
+                                            Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.PositiveColor, arousDisgus);
+            _arousDisgus = arousDisgus;
         }
     }
 }

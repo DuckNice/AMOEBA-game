@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AMOEBA : MonoBehaviour {
+public class MotionCollection : MonoBehaviour {
     public float _speed = 2;
 
     [SerializeField]

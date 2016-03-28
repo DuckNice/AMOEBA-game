@@ -44,7 +44,7 @@ public class Being : MonoBehaviour
     public Dictionary<string, float> PersonalRules;
     public MaskInfo[] CultureMasks;
     public InterPersonInfo[] InterPersons;
-    public Opinion[] Opinion;
+    public NMoodyMaskSystem.Opinion[] Opinion;
 
     [System.Serializable]
 	public struct MaskInfo

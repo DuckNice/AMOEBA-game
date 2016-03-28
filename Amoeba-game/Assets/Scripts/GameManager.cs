@@ -1,8 +1,4 @@
-#define ALL_DEBUG_MODE
-#define MULTITHREAD_DEBUG
-
 using UnityEngine;
-using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 public class GameManager : Singleton<GameManager> {
@@ -18,9 +14,9 @@ public class GameManager : Singleton<GameManager> {
         get { return Instance._AIManager.MoodyMask; }
     }
 
-
+    [Header("Emotion-based variables", order =1)]
 #region Emotions
-    public Sprite ShapeSheet;
+    public Sprite EmotionShapeSheet;
     [SerializeField]
     protected float _framesInEmotionSheet = 21;
     public static float FramesInEmotionSheet { get { return Instance._framesInEmotionSheet; } }
@@ -46,6 +42,14 @@ public class GameManager : Singleton<GameManager> {
     public Color Disgusted { get { return _disgusted; } }
     public Color Aroused { get { return _aroused; } }
 #endregion
+    [Header("Opinion values", order = 2)]
+#region Opinions
+    [SerializeField]
+    protected float _framesInOpinionSheet = 21;
+    public static float FramesInOpinionSheet { get { return Instance._framesInEmotionSheet; } }
+
+    public Sprite OpinionShapeSheet;
+#endregion
 
 
     void Awake()
@@ -58,7 +62,7 @@ public class GameManager : Singleton<GameManager> {
                 _AIManager = gameObject.AddComponent<AIManager>();
             }
         }
-        if (ShapeSheet == null ||
+        if (EmotionShapeSheet == null ||
             Disgusted == default(Color) || Aroused == default(Color) || ConnectionMaterial == null)
         {
             Debug.LogError("Fatal error: GameManager is not properly setup. Closing Application");

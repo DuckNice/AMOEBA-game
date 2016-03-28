@@ -18,7 +18,7 @@ public class EmotionGenerator : MonoBehaviour {
     protected Dictionary<EmotionGenerator, GameObject> _connectedInstances = new Dictionary<EmotionGenerator, GameObject>();
 
     protected static WaitForSeconds _waitforO5 = new WaitForSeconds(0.5f);
-    protected List<GameObject> _emotions = new List<GameObject>();
+    protected List<GameObject> _opinions = new List<GameObject>();
     [SerializeField]
     protected GameObject _emotionPrefab;
 
@@ -37,7 +37,7 @@ public class EmotionGenerator : MonoBehaviour {
         emotions.gameObject.name = "Emotion";
 
         StartCoroutine(UpdateEmotionsLoop());
-
+        StartCoroutine(EmotionAnimator());
     }
 
 
@@ -159,23 +159,41 @@ public class EmotionGenerator : MonoBehaviour {
     float _hapSad = 2.0f, _arousDisgus = 2.0f, _angryFear = 2.0f, _energTired = 2.0f;
     public void UpdateEmotion(float hapSad, float arousDisgus, float angryFear, float energTired)
     {
-        hapSad = (hapSad + 1);
-        hapSad = (hapSad != 0) ? hapSad / 2 : 0;
-        arousDisgus = (arousDisgus + 1);
-        arousDisgus = (arousDisgus != 0) ? arousDisgus / 2 : 0;
-
-
+        hapSad = (hapSad != -1) ? (hapSad + 1) / 2 : 0;
+        arousDisgus = (arousDisgus != -1) ? (arousDisgus + 1) / 2 : 0;
+        angryFear = (angryFear != -1) ? (angryFear + 1) / 2 : 0;
+        energTired = (energTired != -1) ? (energTired + 1) / 2 : 0;
+        
         if (Mathf.Abs(hapSad - _hapSad) > 0.01f)
         {
-            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.ShapeSheet, 97, 97, (int)(hapSad * GameManager.FramesInEmotionSheet), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
             _hapSad = hapSad;
         }
 
         if (Mathf.Abs(arousDisgus - _arousDisgus) > 0.01f)
         {
-            _renderer.color = (arousDisgus < 0) ? Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.NegativeColor, Mathf.Abs(arousDisgus)) :
-                                            Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.PositiveColor, arousDisgus);
+            _renderer.color = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus);
             _arousDisgus = arousDisgus;
         }
+
+        if (Mathf.Abs(angryFear - _angryFear) > 0.01f)
+        {
+            Vector2 sizes = GameManager.MinMaxEmotionSize;
+            float range = sizes.y - sizes.x;
+            float size = (angryFear * range) + sizes.x;
+            _renderer.transform.localScale = new Vector3(size, size, 0);
+            _angryFear = angryFear;
+        }
+    }
+
+    
+
+    IEnumerator EmotionAnimator()
+    {
+        while (true)
+        {
+            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.ShapeSheet, 97, 97, (int)(hapSad * GameManager.FramesInEmotionSheet), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
+        }
+
+        yield break;
     }
 }

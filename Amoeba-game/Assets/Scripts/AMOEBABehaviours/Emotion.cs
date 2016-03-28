@@ -35,8 +35,7 @@ public class Emotion : MonoBehaviour {
 
         if(Mathf.Abs(value - lastvalue) > 0.01f)
         {
-            _renderer.color = (value < 0) ? Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.NegativeColor, Mathf.Abs(value)) : 
-                                            Color.Lerp(GameManager.Instance.NeutralColor, GameManager.Instance.PositiveColor, value);
+            _renderer.color = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, value);
         }
     }
 }

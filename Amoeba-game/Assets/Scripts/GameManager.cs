@@ -1,3 +1,6 @@
+#define ALL_DEBUG_MODE
+#define MULTITHREAD_DEBUG
+
 using UnityEngine;
 using System.Collections.Generic;
 using NMoodyMaskSystem;
@@ -30,13 +33,19 @@ public class GameManager : Singleton<GameManager> {
     protected Vector2 _minMaxEmotionSpeed = new Vector2(1, 3);
     public static Vector2 MinMaxEmotionSpeed { get { return Instance._minMaxEmotionSpeed; } }
 
-    public Material ConnectionMaterial;
-    public Color NegativeColor;
-    public Color NeutralColor;
-    public Color PositiveColor;
-#endregion
+    [SerializeField]
+    [Range(0f,1f)]
+    protected Vector2 _minMaxBrightness = new Vector2(0, 1);
+    public static Vector2 MinMaxBrightness { get { return Instance._minMaxBrightness; } }
 
-    
+    public Material ConnectionMaterial;
+    [SerializeField]
+    private Color _disgusted;
+    [SerializeField]
+    private Color _aroused;
+    public Color Disgusted { get { return _disgusted; } }
+    public Color Aroused { get { return _aroused; } }
+#endregion
 
 
     void Awake()
@@ -50,7 +59,7 @@ public class GameManager : Singleton<GameManager> {
             }
         }
         if (ShapeSheet == null ||
-            NegativeColor == default(Color) || NeutralColor == default(Color) || PositiveColor == default(Color) || ConnectionMaterial == null)
+            Disgusted == default(Color) || Aroused == default(Color) || ConnectionMaterial == null)
         {
             Debug.LogError("Fatal error: GameManager is not properly setup. Closing Application");
             UnityEditor.EditorApplication.isPlaying = false;

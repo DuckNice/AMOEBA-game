@@ -20,10 +20,10 @@ public class AMOEBAManager : MonoBehaviour {
     protected static WaitForSeconds _waitforO5 = new WaitForSeconds(0.5f);
     protected List<GameObject> _opinions = new List<GameObject>();
     [SerializeField]
-    protected GameObject _emotionPrefab;
+    protected GameObject _spawnable;
     protected UtilityTimer animationTimer;
-    public GameObject EmotionObj { get; protected set; }
-    SpriteRenderer _renderer;
+    public GameObject TraitObj { get; protected set; }
+    SpriteRenderer _emotionRenderer;
 
 
     void Awake()
@@ -35,7 +35,7 @@ public class AMOEBAManager : MonoBehaviour {
     void Start()
     {
         GameObject emotions = new GameObject();
-        _renderer = emotions.AddComponent<SpriteRenderer>();
+        _emotionRenderer = emotions.AddComponent<SpriteRenderer>();
         emotions.transform.parent = transform;
         emotions.transform.localPosition = new Vector3(0, 0, 1);
         emotions.gameObject.name = "Emotion";
@@ -48,22 +48,15 @@ public class AMOEBAManager : MonoBehaviour {
 
     public void CreateConnection(AMOEBAManager other)
     {
-        GameObject othersEmotion = Instantiate(_emotionPrefab);
-
-        Opinion.CreateComponent(othersEmotion, CharacterName, other.CharacterName, other.EmotionObj);
+        GameObject opinionHolder = Instantiate(_spawnable);
+        opinionHolder.name = "Opinion towards " + other.CharacterName;
+        opinionHolder.transform.parent = transform;
+        Opinion.CreateComponent(opinionHolder, CharacterName, other.CharacterName, other.TraitObj);
+        
 
         _connectedInstances.Add(other);
     }
-
-
-    public static void ForceUpdateNotableInstances()
-    {
-        foreach(AMOEBAManager generator in _instances)
-        {
-            generator.UpdateNotableInstances();
-        }
-    }
-
+    
 
     private IEnumerator UpdateEmotionsLoop()
     {
@@ -79,16 +72,6 @@ public class AMOEBAManager : MonoBehaviour {
                 }
             }
 
-            Person person = GameManager.MoodyMask.GetPerson(CharacterName);
-            if (person != null)
-            {
-                UpdateEmotion(person.Moods[MoodTypes.hapSad], person.Moods[MoodTypes.arousDisgus], person.Moods[MoodTypes.angryFear], person.Moods[MoodTypes.energTired]);
-            }
-            else
-            {
-                Debug.LogError("Error: No person with name: '" + CharacterName + "' in PersonContainer. not updating emotion.");
-            }
-
             yield return _waitforO5;
         }
     }
@@ -96,10 +79,10 @@ public class AMOEBAManager : MonoBehaviour {
 
     protected void UpdateNotableInstances()
     {
-        foreach(AMOEBAManager gen in _instances)
-        {
-            _notableInstances.Clear();
+        _notableInstances.Clear();
 
+        foreach (AMOEBAManager gen in _instances)
+        {
             if(gen != this && (gen.transform.position - transform.position).magnitude < _consideranceRadius && !(_connectedInstances.Contains(gen)))
             {
                 _notableInstances.Add(gen);
@@ -107,9 +90,23 @@ public class AMOEBAManager : MonoBehaviour {
         }
     }
 
-
-    public void UpdateEmotion(float hapSad, float arousDisgus, float angryFear, float energTired)
+    Person person;
+    public void Update()
     {
+        if (person == null)
+        {
+            person = GameManager.MoodyMask.GetPerson(CharacterName);
+
+            if (person == null)
+            {
+                Debug.LogError("Error: No person with name: '" + CharacterName + "' in PersonContainer. not updating emotion.");
+                return;
+            }
+        }
+
+        float hapSad = person.Moods[MoodTypes.hapSad], arousDisgus = person.Moods[MoodTypes.arousDisgus], 
+            angryFear = person.Moods[MoodTypes.angryFear], energTired = person.Moods[MoodTypes.energTired];
+
         //Adjust emotions for use (0f to 1f).
         hapSad = (hapSad != -1) ? (hapSad + 1) / 2 : 0;
         arousDisgus = (arousDisgus != -1) ? (arousDisgus + 1) / 2 : 0;
@@ -119,13 +116,13 @@ public class AMOEBAManager : MonoBehaviour {
         //Set happy/sad & aroused/disgusted
         Color color = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus) * hapSad;
         color.a = 1;
-        _renderer.color = color;
+        _emotionRenderer.color = color;
 
         //Set anger/fear
         Vector2 sizes = GameManager.MinMaxEmotionSize;
         float range = sizes.y - sizes.x;
         float size = (angryFear * range) + sizes.x;
-        _renderer.transform.localScale = new Vector3(size, size, 0);
+        _emotionRenderer.transform.localScale = new Vector3(size, size, 0);
 
         //Set energetic/tired
         if (animationTimer != null)
@@ -141,6 +138,6 @@ public class AMOEBAManager : MonoBehaviour {
     {
         currFrame = (currFrame < GameManager.FramesInEmotionSheet) ? currFrame + 1 : 1;
 
-        AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.EmotionShapeSheet, 97, 97, currFrame, 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
+        AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.EmotionShapeSheet, 97, 97, currFrame, 1, (sprite) => { Destroy(_emotionRenderer.sprite); _emotionRenderer.sprite = sprite; });
     }
 }

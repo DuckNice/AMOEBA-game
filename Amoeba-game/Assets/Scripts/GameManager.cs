@@ -41,12 +41,29 @@ public class GameManager : Singleton<GameManager> {
     private Color _aroused;
     public Color Disgusted { get { return _disgusted; } }
     public Color Aroused { get { return _aroused; } }
-#endregion
-    [Header("Opinion values", order = 2)]
+    #endregion
+    [Header("Traits values", order = 2)]
+    #region Traits
+    [SerializeField]
+    private Color _nice;
+    [SerializeField]
+    private Color _nasty;
+    public Color Nice { get { return _nice; } }
+    public Color Nasty { get { return _nasty; } }
+    public float traitSpikes;
+    public Sprite TraitCore;
+    public Sprite TraitSpike;
+    public Sprite HaloSprite;
+    [SerializeField]
+    public float FramesInTraitSpike = 21;
+
+    #endregion
+    [Header("Opinion values", order = 3)]
 #region Opinions
     [SerializeField]
     protected float _framesInOpinionSheet = 21;
     public static float FramesInOpinionSheet { get { return Instance._framesInEmotionSheet; } }
+
 
     public Sprite OpinionShapeSheet;
 #endregion

@@ -50,9 +50,7 @@ public class Opinion : MonoBehaviour {
         nicNas = (nicNas != -1) ? (nicNas + 1) / 2 : 0;
         chaGre = (chaGre != -1) ? (chaGre + 1) / 2 : 0;
         honFal = (honFal != -1) ? (honFal + 1) / 2 : 0;
-
         
-
         _renderer.sprite =
         AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.EmotionShapeSheet, 97, 97, (int)((GameManager.FramesInOpinionSheet) * honFal), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
 

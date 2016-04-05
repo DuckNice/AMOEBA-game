@@ -24,6 +24,11 @@ public class AMOEBAManager : MonoBehaviour {
     protected UtilityTimer animationTimer;
     public GameObject TraitObj { get; protected set; }
     SpriteRenderer _emotionRenderer;
+    Transform _traitHolder;
+    SpriteRenderer _traitCoreRenderer;
+    List<Transform> _traitSpikes;
+    List<SpriteRenderer> _traitSpikeRenderers = new List<SpriteRenderer>();
+    SpriteRenderer _glowRenderer;
 
 
     void Awake()
@@ -37,12 +42,34 @@ public class AMOEBAManager : MonoBehaviour {
         GameObject emotions = new GameObject();
         _emotionRenderer = emotions.AddComponent<SpriteRenderer>();
         emotions.transform.parent = transform;
-        emotions.transform.localPosition = new Vector3(0, 0, 1);
+        emotions.transform.localPosition = new Vector3(0, 1, 0);
         emotions.gameObject.name = "Emotion";
 
-        StartCoroutine(UpdateEmotionsLoop());
+        BuildTrait();
+        
 
-        animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, GameManager.MinMaxEmotionSpeed.x, () => { EmotionAnimator(); });
+
+        StartCoroutine(OpinionsLoop());
+
+        animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, GameManager.MinMaxEmotionSpeed.x, () => { Animator(); });
+    }
+
+    void BuildTrait()
+    {
+        GameObject traits = new GameObject();
+        // _traitRenderer = traits.AddComponent<SpriteRenderer>();
+        traits.transform.parent = transform;
+        traits.transform.localPosition = new Vector3(1, 0, 0);
+        traits.gameObject.name = "Trait";
+        _traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
+
+
+        GameObject halo = new GameObject();
+        halo.transform.parent = traits.transform;
+        halo.transform.localPosition = new Vector3(0, 0, 0);
+        halo.gameObject.name = "Trait halo";
+        _glowRenderer = halo.AddComponent<SpriteRenderer>();
+        _glowRenderer.sprite = GameManager.Instance.HaloSprite;
     }
 
 
@@ -58,7 +85,7 @@ public class AMOEBAManager : MonoBehaviour {
     }
     
 
-    private IEnumerator UpdateEmotionsLoop()
+    private IEnumerator OpinionsLoop()
     {
         while(true)
         {
@@ -90,9 +117,12 @@ public class AMOEBAManager : MonoBehaviour {
         }
     }
 
+
     Person person;
     public void Update()
     {
+        //Emotions
+
         if (person == null)
         {
             person = GameManager.MoodyMask.GetPerson(CharacterName);
@@ -114,9 +144,9 @@ public class AMOEBAManager : MonoBehaviour {
         energTired = (energTired != -1) ? (energTired + 1) / 2 : 0;
         
         //Set happy/sad & aroused/disgusted
-        Color color = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus) * hapSad;
-        color.a = 1;
-        _emotionRenderer.color = color;
+        Color emotionColor = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus) * hapSad;
+        emotionColor.a = 1;
+        _emotionRenderer.color = emotionColor;
 
         //Set anger/fear
         Vector2 sizes = GameManager.MinMaxEmotionSize;
@@ -130,11 +160,52 @@ public class AMOEBAManager : MonoBehaviour {
             float relSpeed = (GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired;
             animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.x + relSpeed;
         }
+
+
+        //Traits
+
+        float charGreed = person.AbsTraits.Traits[TraitTypes.CharitableGreedy].GetTraitValue(),
+            honFalse = person.AbsTraits.Traits[TraitTypes.HonestFalse].GetTraitValue(),
+            niceNasty = person.AbsTraits.Traits[TraitTypes.NiceNasty].GetTraitValue();
+
+        //Adjust emotions for use (0f to 1f).
+        niceNasty = (niceNasty != -1) ? (niceNasty + 1) / 2 : 0;
+        honFalse = (honFalse != -1) ? (honFalse + 1) / 2 : 0;
+        charGreed = (charGreed != -1) ? (charGreed + 1) / 2 : 0;
+
+        //Set Nice/Nasty
+        Color halo = Color.Lerp(GameManager.Instance.Nice, GameManager.Instance.Nasty, niceNasty);
+        emotionColor.a = 1;
+        _glowRenderer.color = halo;
+
+        //Set Greedy/Charitable
+        float angle = 180f * charGreed;
+        //   _emotionRenderer.transform.localScale = new Vector3(size, size, 0);
+
+        //Set Hon/False
+        int honFalFrame = (int)(honFalse * GameManager.Instance.FramesInTraitSpike);
+
+        if (honFalFrame != _lastHonestFalseFrame)
+        {
+
+            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitCore, 97, 97, honFalFrame, 1, (sprite) => { Destroy(_traitCoreRenderer.sprite); _traitCoreRenderer.sprite = sprite; });
+            foreach(SpriteRenderer renderer in _traitSpikeRenderers)
+            {
+                AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitSpike, 97, 97, honFalFrame, 1, (sprite) => { Destroy(renderer.sprite); renderer.sprite = sprite; });
+            }
+            _lastHonestFalseFrame = honFalFrame;
+        }
+        /*  if (animationTimer != null)
+          {
+              float relSpeed = (GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired;
+              animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.x + relSpeed;
+          }*/
     }
+    int _lastHonestFalseFrame = -10;
 
 
     int currFrame = 1;
-    void EmotionAnimator()
+    void Animator()
     {
         currFrame = (currFrame < GameManager.FramesInEmotionSheet) ? currFrame + 1 : 1;
 

@@ -138,8 +138,6 @@ public class Being : MonoBehaviour
 		}
 	}
 
-
-
     
     [HideInInspector]
 	public Rule CurrentRule;

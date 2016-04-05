@@ -11,7 +11,7 @@ public class AnimationCalculator : MonoBehaviour {
         animationToGet = (int)Mathf.Clamp(animationToGet, 1, spriteSheet.rect.height / height);
         frameToGet = (int)Mathf.Clamp(frameToGet, 1, spriteSheet.rect.width / width);
 
-        Sprite newSprite = Sprite.Create(spriteSheet.texture, new Rect(width * (frameToGet-1),height * (animationToGet-1),width, height), Vector2.zero);
+        Sprite newSprite = Sprite.Create(spriteSheet.texture, new Rect(width * (frameToGet-1),height * (animationToGet-1),width, height), new Vector2(0.5f, 0.5f));
 
         if (callback != null)
         {

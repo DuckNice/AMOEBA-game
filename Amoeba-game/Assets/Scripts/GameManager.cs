@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager> {
     }
 
     [Header("Emotion-based variables", order =1)]
+
 #region Emotions
     public Sprite EmotionShapeSheet;
     [SerializeField]
@@ -39,8 +40,11 @@ public class GameManager : Singleton<GameManager> {
     private Color _disgusted;
     [SerializeField]
     private Color _aroused;
+    [SerializeField]
+    private Color _sad;
     public Color Disgusted { get { return _disgusted; } }
     public Color Aroused { get { return _aroused; } }
+    public Color Sad { get { return _sad; } }
     #endregion
     [Header("Traits values", order = 2)]
     #region Traits
@@ -56,6 +60,12 @@ public class GameManager : Singleton<GameManager> {
     public Sprite HaloSprite;
     [SerializeField]
     public float FramesInTraitSpike = 21;
+    public int TraitSpikesInCircle = 10;
+    public float TraitCircleDiameter = 0.5f;
+    public float TraitScale;
+    [SerializeField]
+    protected GameObject _spawnable;
+    public GameObject Spawnable { get { return _spawnable; } }
 
     #endregion
     [Header("Opinion values", order = 3)]

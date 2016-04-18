@@ -19,21 +19,28 @@ public class AMOEBAManager : MonoBehaviour {
 
     protected static WaitForSeconds _waitforO5 = new WaitForSeconds(0.5f);
     protected List<GameObject> _opinions = new List<GameObject>();
-    [SerializeField]
-    protected GameObject _spawnable;
     protected UtilityTimer animationTimer;
-    public GameObject TraitObj { get; protected set; }
+
     SpriteRenderer _emotionRenderer;
-    Transform _traitHolder;
-    SpriteRenderer _traitCoreRenderer;
-    List<Transform> _traitSpikes;
-    List<SpriteRenderer> _traitSpikeRenderers = new List<SpriteRenderer>();
-    SpriteRenderer _glowRenderer;
+
+    [SerializeField]
+    Traits traits;
+    public Traits Traits{get { return traits; } private set { traits = value; }}
 
 
     void Awake()
     {
         _instances.Add(this);
+
+        if(traits == null)
+        {
+            traits = GetComponent<Traits>();
+
+            if(traits == null)
+            {
+                traits = gameObject.AddComponent<Traits>();
+            }
+        }
     }
 
 
@@ -45,40 +52,22 @@ public class AMOEBAManager : MonoBehaviour {
         emotions.transform.localPosition = new Vector3(0, 1, 0);
         emotions.gameObject.name = "Emotion";
 
-        BuildTrait();
-        
-
+        traits.BuildTrait();
 
         StartCoroutine(OpinionsLoop());
 
         animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, GameManager.MinMaxEmotionSpeed.x, () => { Animator(); });
     }
 
-    void BuildTrait()
-    {
-        GameObject traits = new GameObject();
-        // _traitRenderer = traits.AddComponent<SpriteRenderer>();
-        traits.transform.parent = transform;
-        traits.transform.localPosition = new Vector3(1, 0, 0);
-        traits.gameObject.name = "Trait";
-        _traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
-
-
-        GameObject halo = new GameObject();
-        halo.transform.parent = traits.transform;
-        halo.transform.localPosition = new Vector3(0, 0, 0);
-        halo.gameObject.name = "Trait halo";
-        _glowRenderer = halo.AddComponent<SpriteRenderer>();
-        _glowRenderer.sprite = GameManager.Instance.HaloSprite;
-    }
+    
 
 
     public void CreateConnection(AMOEBAManager other)
     {
-        GameObject opinionHolder = Instantiate(_spawnable);
+        GameObject opinionHolder = Instantiate(GameManager.Instance.Spawnable);
         opinionHolder.name = "Opinion towards " + other.CharacterName;
         opinionHolder.transform.parent = transform;
-        Opinion.CreateComponent(opinionHolder, CharacterName, other.CharacterName, other.TraitObj);
+        Opinion.CreateComponent(opinionHolder, CharacterName, other.CharacterName, other.traits.TraitObj);
         
 
         _connectedInstances.Add(other);
@@ -122,7 +111,6 @@ public class AMOEBAManager : MonoBehaviour {
     public void Update()
     {
         //Emotions
-
         if (person == null)
         {
             person = GameManager.MoodyMask.GetPerson(CharacterName);
@@ -144,7 +132,8 @@ public class AMOEBAManager : MonoBehaviour {
         energTired = (energTired != -1) ? (energTired + 1) / 2 : 0;
         
         //Set happy/sad & aroused/disgusted
-        Color emotionColor = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus) * hapSad;
+        Color emotionColor = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus);
+        emotionColor = Color.Lerp(emotionColor, GameManager.Instance.Sad, hapSad);
         emotionColor.a = 1;
         _emotionRenderer.color = emotionColor;
 
@@ -163,48 +152,18 @@ public class AMOEBAManager : MonoBehaviour {
 
 
         //Traits
-
         float charGreed = person.AbsTraits.Traits[TraitTypes.CharitableGreedy].GetTraitValue(),
             honFalse = person.AbsTraits.Traits[TraitTypes.HonestFalse].GetTraitValue(),
             niceNasty = person.AbsTraits.Traits[TraitTypes.NiceNasty].GetTraitValue();
 
-        //Adjust emotions for use (0f to 1f).
-        niceNasty = (niceNasty != -1) ? (niceNasty + 1) / 2 : 0;
-        honFalse = (honFalse != -1) ? (honFalse + 1) / 2 : 0;
-        charGreed = (charGreed != -1) ? (charGreed + 1) / 2 : 0;
-
-        //Set Nice/Nasty
-        Color halo = Color.Lerp(GameManager.Instance.Nice, GameManager.Instance.Nasty, niceNasty);
-        emotionColor.a = 1;
-        _glowRenderer.color = halo;
-
-        //Set Greedy/Charitable
-        float angle = 180f * charGreed;
-        //   _emotionRenderer.transform.localScale = new Vector3(size, size, 0);
-
-        //Set Hon/False
-        int honFalFrame = (int)(honFalse * GameManager.Instance.FramesInTraitSpike);
-
-        if (honFalFrame != _lastHonestFalseFrame)
-        {
-
-            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitCore, 97, 97, honFalFrame, 1, (sprite) => { Destroy(_traitCoreRenderer.sprite); _traitCoreRenderer.sprite = sprite; });
-            foreach(SpriteRenderer renderer in _traitSpikeRenderers)
-            {
-                AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitSpike, 97, 97, honFalFrame, 1, (sprite) => { Destroy(renderer.sprite); renderer.sprite = sprite; });
-            }
-            _lastHonestFalseFrame = honFalFrame;
-        }
-        /*  if (animationTimer != null)
-          {
-              float relSpeed = (GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired;
-              animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.x + relSpeed;
-          }*/
+        
+        traits.UpdateTraits(niceNasty, charGreed, honFalse);
     }
-    int _lastHonestFalseFrame = -10;
 
 
     int currFrame = 1;
+
+
     void Animator()
     {
         currFrame = (currFrame < GameManager.FramesInEmotionSheet) ? currFrame + 1 : 1;

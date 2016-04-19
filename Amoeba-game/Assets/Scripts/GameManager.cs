@@ -62,6 +62,8 @@ public class GameManager : Singleton<GameManager> {
     public float FramesInTraitSpike = 21;
     public int TraitSpikesInCircle = 10;
     public float TraitCircleDiameter = 0.5f;
+    public Vector2 MinMaxTraitRotationSpeed;
+    public Vector2 MinMaxTraitRotationDuration;
     public float TraitScale;
     [SerializeField]
     protected GameObject _spawnable;

@@ -31,16 +31,6 @@ public class AMOEBAManager : MonoBehaviour {
     void Awake()
     {
         _instances.Add(this);
-
-        if(traits == null)
-        {
-            traits = GetComponent<Traits>();
-
-            if(traits == null)
-            {
-                traits = gameObject.AddComponent<Traits>();
-            }
-        }
     }
 
 
@@ -52,11 +42,11 @@ public class AMOEBAManager : MonoBehaviour {
         emotions.transform.localPosition = new Vector3(0, 1, 0);
         emotions.gameObject.name = "Emotion";
 
-        traits.BuildTrait();
+        traits = Traits.BuildTrait(gameObject);
 
         StartCoroutine(OpinionsLoop());
 
-        animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, GameManager.MinMaxEmotionSpeed.x, () => { Animator(); });
+        animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, () => { Animator(); }, GameManager.MinMaxEmotionSpeed.x);
     }
 
     

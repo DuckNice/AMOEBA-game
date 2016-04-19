@@ -8,28 +8,40 @@ public class Traits : MonoBehaviour {
     List<Transform> _traitSpikes = new List<Transform>();
     List<SpriteRenderer> _traitSpikeRenderers = new List<SpriteRenderer>();
     SpriteRenderer _glowRenderer;
+    UtilityTimer RotationMovement;
 
     int _lastHonestFalseFrame = -10;
 
+    void Start()
+    {
+        int ticksForAnimation = Random.Range((int)GameManager.Instance.MinMaxTraitRotationDuration.x, (int)GameManager.Instance.MinMaxTraitRotationDuration.y);
+        float rotationSpeed = Random.Range(GameManager.Instance.MinMaxTraitRotationSpeed.x, GameManager.Instance.MinMaxTraitRotationSpeed.y);
+        rotationSpeed = (Random.Range(-1,1) > 1) ? rotationSpeed : -rotationSpeed;
 
-    public void BuildTrait()
+        RotationMovement = UtilityTimer.CreateUtilityTimer(gameObject, () => { transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, 0.05f, ticksForAnimation);
+    }
+
+#region BuildTraitFunctionality
+    public static Traits BuildTrait(GameObject parent)
     {
         GameObject traits = new GameObject();
-        // _traitRenderer = traits.AddComponent<SpriteRenderer>();
-        traits.transform.parent = transform;
+        Traits traitInst = traits.AddComponent<Traits>();
+        traits.transform.parent = parent.transform;
         traits.transform.localPosition = new Vector3(1, 0, 0);
         traits.gameObject.name = "Traits";
-        _traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
+        traitInst._traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
 
         
         GameObject halo = new GameObject();
         halo.transform.parent = traits.transform;
         halo.transform.localPosition = new Vector3(0, 0, 0);
         halo.gameObject.name = "Trait halo";
-        _glowRenderer = halo.AddComponent<SpriteRenderer>();
-        _glowRenderer.sprite = GameManager.Instance.HaloSprite;
+        traitInst._glowRenderer = halo.AddComponent<SpriteRenderer>();
+        traitInst._glowRenderer.sprite = GameManager.Instance.HaloSprite;
 
-        UpdateTraits(0,0,0);
+        traitInst.UpdateTraits(0,0,0);
+
+        return traitInst;
     }
 
 
@@ -44,7 +56,7 @@ public class Traits : MonoBehaviour {
                     GameObject spawned = Instantiate(GameManager.Instance.Spawnable);
                     _traitSpikes.Add(spawned.transform);
                     spawned.name = "Trait spike";
-                    spawned.transform.SetParent(_traitCoreRenderer.transform, false);
+                    spawned.transform.SetParent(transform, false);
 
                     SpriteRenderer renderer = spawned.GetComponent<SpriteRenderer>();
                     _traitSpikeRenderers.Add((renderer != null) ? renderer : spawned.gameObject.AddComponent<SpriteRenderer>());
@@ -101,21 +113,38 @@ public class Traits : MonoBehaviour {
             AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitCore, 97, 97, honFalFrame, 1, (sprite) => { Destroy(_traitCoreRenderer.sprite); _traitCoreRenderer.sprite = sprite; });
             _traitCoreRenderer.color = new Color(0, 0, 0);
             
-                AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitSpike, 97, 97, honFalFrame, 1, (sprite) => {
-                    foreach (SpriteRenderer renderer in _traitSpikeRenderers)
-                    {
-                        Destroy(renderer.sprite);
-                        renderer.sprite = sprite;
-                        renderer.color = new Color(0, 0, 0);
-                    }
-                });
+            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.TraitSpike, 97, 97, honFalFrame, 1, (sprite) => {
+                foreach (SpriteRenderer renderer in _traitSpikeRenderers)
+                {
+                    Destroy(renderer.sprite);
+                    renderer.sprite = sprite;
+                    renderer.color = new Color(0, 0, 0);
+                }
+            });
 
             _lastHonestFalseFrame = honFalFrame;
         }
-        /*  if (animationTimer != null)
-          {
-              float relSpeed = (GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired;
-              animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.x + relSpeed;
-          }*/
     }
+    #endregion
+
+    void Update()
+    {
+        Rotation();
+    }
+
+    #region TraitMovement
+
+    void Rotation()
+    {
+        if(RotationMovement.IsTimerRunning() == -1)
+        {
+            int ticksForAnimation = Random.Range((int)GameManager.Instance.MinMaxTraitRotationDuration.x, (int)GameManager.Instance.MinMaxTraitRotationDuration.y);
+            float rotationSpeed = Random.Range(GameManager.Instance.MinMaxTraitRotationSpeed.x, GameManager.Instance.MinMaxTraitRotationSpeed.y);
+            rotationSpeed = (Random.Range(0f, 2f) > 1f) ? rotationSpeed : -rotationSpeed;
+
+            RotationMovement.UpdateDelegate(() => { transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, ticksForAnimation);
+        }
+    }
+    
+    #endregion
 }

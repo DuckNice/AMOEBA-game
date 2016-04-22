@@ -22,10 +22,8 @@ public class AMOEBAManager : MonoBehaviour {
     protected UtilityTimer animationTimer;
 
     SpriteRenderer _emotionRenderer;
-
-    [SerializeField]
-    Traits traits;
-    public Traits Traits{get { return traits; } private set { traits = value; }}
+    
+    public Traits Traits{ get; private set; }
 
 
     void Awake()
@@ -42,7 +40,7 @@ public class AMOEBAManager : MonoBehaviour {
         emotions.transform.localPosition = new Vector3(0, 1, 0);
         emotions.gameObject.name = "Emotion";
 
-        traits = Traits.BuildTrait(gameObject);
+        Traits = Traits.BuildTrait(gameObject);
 
         StartCoroutine(OpinionsLoop());
 
@@ -54,10 +52,8 @@ public class AMOEBAManager : MonoBehaviour {
 
     public void CreateConnection(AMOEBAManager other)
     {
-        GameObject opinionHolder = Instantiate(GameManager.Instance.Spawnable);
-        opinionHolder.name = "Opinion towards " + other.CharacterName;
-        opinionHolder.transform.parent = transform;
-        Opinion.CreateComponent(opinionHolder, CharacterName, other.CharacterName, other.traits.TraitObj);
+        
+        Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
         
 
         _connectedInstances.Add(other);
@@ -147,7 +143,7 @@ public class AMOEBAManager : MonoBehaviour {
             niceNasty = person.AbsTraits.Traits[TraitTypes.NiceNasty].GetTraitValue();
 
         
-        traits.UpdateTraits(niceNasty, charGreed, honFalse);
+        Traits.UpdateTraits(niceNasty, charGreed, honFalse);
     }
 
 

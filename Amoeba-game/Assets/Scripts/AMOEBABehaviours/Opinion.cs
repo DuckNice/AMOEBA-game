@@ -2,26 +2,36 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class Opinion : MonoBehaviour {
-    SpriteRenderer _renderer;
     GameObject emotion;
+    GameObject myObject;
     string _thisCharacterName;
     string _otherCharacterName;
     protected LineRenderer line;
+    NMoodyMaskSystem.Person me;
 
 
-    void Awake()
-    {
-        _renderer = GetComponent<SpriteRenderer>();
-    }
 
 
     public static Opinion CreateComponent(GameObject thisObject, string thisCharName, string otherCharName, GameObject emotionObj)
     {
-        Opinion myC = thisObject.AddComponent<Opinion>();
+        NMoodyMaskSystem.Person me = GameManager.MoodyMask.GetPerson(thisCharName);
 
+        if(me == null)
+        {
+            Debug.LogError("No person with the name: '" + thisCharName + "' was found. Not making opinion.");
+        }
+
+        GameObject traitObject = Instantiate(GameManager.Instance.Spawnable);
+        traitObject.name = "Opinion towards " + otherCharName;
+        traitObject.transform.parent = thisObject.transform;
+
+        Opinion myC = traitObject.AddComponent<Opinion>();
+        myC.myObject = thisObject;
+        myC.me = me;
         myC.emotion = emotionObj;
         myC._thisCharacterName = thisCharName;
         myC._otherCharacterName = otherCharName;
+        myC.CreateLineRenderer();
 
         return myC;
     }
@@ -29,17 +39,18 @@ public class Opinion : MonoBehaviour {
 
     void Update()
     {
-        NMoodyMaskSystem.Person me = GameManager.MoodyMask.GetPerson(_thisCharacterName);
-
         if(me != null)
         {
-            List<NMoodyMaskSystem.Opinion> opinions = me.Opinions.FindAll(x => x.Pers.Name == _otherCharacterName);
+            //TODO: hide opinion getting.
+            List<NMoodyMaskSystem.Opinion> opinions = me.Opinions.FindAll(x => x.Pers.Name == _otherCharacterName.Trim().ToLower());
 
             if (opinions.Count == 3)
             {
                 UpdateOpinion(opinions.Find(x => x.Trait == NMoodyMaskSystem.TraitTypes.NiceNasty).Value,
                     opinions.Find(x => x.Trait == NMoodyMaskSystem.TraitTypes.HonestFalse).Value,
                     opinions.Find(x => x.Trait == NMoodyMaskSystem.TraitTypes.CharitableGreedy).Value);
+
+                DrawLine();
             }
         }
     }
@@ -50,10 +61,6 @@ public class Opinion : MonoBehaviour {
         nicNas = (nicNas != -1) ? (nicNas + 1) / 2 : 0;
         chaGre = (chaGre != -1) ? (chaGre + 1) / 2 : 0;
         honFal = (honFal != -1) ? (honFal + 1) / 2 : 0;
-        
-        _renderer.sprite =
-        AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.EmotionShapeSheet, 97, 97, (int)((GameManager.FramesInOpinionSheet) * honFal), 1, (sprite) => { Destroy(_renderer.sprite); _renderer.sprite = sprite; });
-
     }
 
 
@@ -69,7 +76,7 @@ public class Opinion : MonoBehaviour {
     void DrawLine()
     {
         Vector3[] poss = new Vector3[2];
-        poss[0] = transform.position;
+        poss[0] = myObject.transform.position;
         poss[1] = emotion.transform.position;
 
         line.SetPositions(poss);

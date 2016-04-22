@@ -57,9 +57,12 @@ public class Being : MonoBehaviour
 	[System.Serializable]
 	public struct InterPersonInfo
 	{
+        [Range(-1f,1f)]
 		public float NiceNasty;
-		public float HonestFalse;
-		public float CheritableGreedy;
+        [Range(-1f, 1f)]
+        public float HonestFalse;
+        [Range(-1f, 1f)]
+        public float CharitableGreedy;
 		[HideInInspector]
 		public string PersonName;
 		public string TargetName;

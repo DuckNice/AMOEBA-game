@@ -103,16 +103,22 @@ public class NPCCreator
 	{
 		while (true) 
 		{
-			if(MoodyMask.GetPerson(info.TargetName) != null)
+            Person target = MoodyMask.GetPerson(info.TargetName);
+
+            if (target != null)
 			{
+                Person me = MoodyMask.GetPerson(info.PersonName);
 
-                Debug.LogWarning("Setup person '" + info.PersonName + ", " + info.TargetName + " executed.");
+                me.CreateOpinion(target, info.NiceNasty, info.CharitableGreedy, info.HonestFalse);
 
+#if ALL_DEBUG_MODE || NPCCREATOR_DEBUG_MODE
+                Debug.Log("Setup person '" + info.PersonName + ", " + info.TargetName + " executed.");
+#endif
 
                 yield break;
 			}
 
-            Debug.LogWarning("Setup person '" + info.PersonName + ", " + info.TargetName + " has no target. Waiting.");
+            Debug.LogWarning("Setting up inter-person '" + info.PersonName + " towards '" + ((string.IsNullOrEmpty(info.TargetName) ) ? "<<No Name>>" : info.TargetName) + "' has no target. Waiting.");
 
 			yield return new WaitForSeconds(0.5f);
 		}

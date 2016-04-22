@@ -342,28 +342,53 @@ namespace NMoodyMaskSystem
 		}
         
 
-		public bool CheckRoleName(string s, Person p = null){
+        public void CreateOpinion(Person pers, float NiceNasty, float CharitableGreedy, float HonestFalse, bool shouldOverride = false)
+        {
+            List<Opinion> curOpininon = Opinions.FindAll(x => x.Pers == pers);
 
-			if(p == null){
+            if(curOpininon.Count == 0)
+            {
+                Opinions.Add(new Opinion(TraitTypes.CharitableGreedy, pers, CharitableGreedy));
+                Opinions.Add(new Opinion(TraitTypes.NiceNasty, pers, NiceNasty));
+                Opinions.Add(new Opinion(TraitTypes.HonestFalse, pers, HonestFalse));
+            }
+            else if(shouldOverride)
+            {
+                foreach(Opinion opinion in Opinions)
+                {
+                    opinion.Value = (opinion.Trait == TraitTypes.CharitableGreedy) ? CharitableGreedy : ((opinion.Trait == TraitTypes.HonestFalse) ? HonestFalse : NiceNasty);
+                }
+            }
+            else
+            {
+                System.Console.WriteLine("Error in CreateOpinion for " + Name + ". Opininon towards " + pers.Name + " already exists, but function not told to override. Not updating opinion");
+            }
+
+        }
+
+
+		public bool CheckRoleName(string role, Person pers = null){
+
+			if(pers == null){
 				foreach (Link l in InterPersonal) {
-					if (p == null) {
-						p = Empty;
+					if (pers == null) {
+						pers = Empty;
 					}
-					if(l.RoleRefs.ContainsKey(p)){
-						foreach(Person i in l.RoleRefs.Keys){
-							if(l.RoleRefs[i].ContainsKey(s)){
+					if(l.RoleRefs.ContainsKey(pers)){
+						foreach(Person curPers in l.RoleRefs.Keys){
+							if(l.RoleRefs[curPers].ContainsKey(role)){
 								return true;
 							}
 						}
 					}
 				}
 					foreach (Link l in Culture) {
-						if (p == null) {
-							p = Empty;
+						if (pers == null) {
+							pers = Empty;
 						}
-						if(l.RoleRefs.ContainsKey(p)){
-							foreach(Person i in l.RoleRefs.Keys){
-								if(l.RoleRefs[i].ContainsKey(s)){
+						if(l.RoleRefs.ContainsKey(pers)){
+							foreach(Person curPers in l.RoleRefs.Keys){
+								if(l.RoleRefs[curPers].ContainsKey(role)){
 									return true;
 								}
 							}
@@ -372,21 +397,21 @@ namespace NMoodyMaskSystem
 				}
 
 				foreach (Link l in InterPersonal) {
-					if (p == null) {
-						p = Empty;
+					if (pers == null) {
+						pers = Empty;
 					}
-					if(l.RoleRefs.ContainsKey(p)){
-						if(l.RoleRefs[p].ContainsKey(s)){
+					if(l.RoleRefs.ContainsKey(pers)){
+						if(l.RoleRefs[pers].ContainsKey(role)){
 							return true;
 						}
 					}
 				}
 				foreach (Link l in Culture) {
-					if (p == null) {
-						p = Empty;
+					if (pers == null) {
+						pers = Empty;
 					}
-					if(l.RoleRefs.ContainsKey(p)){
-						if(l.RoleRefs[p].ContainsKey(s)){
+					if(l.RoleRefs.ContainsKey(pers)){
+						if(l.RoleRefs[pers].ContainsKey(role)){
 							return true;
 						}
 					}
@@ -395,14 +420,14 @@ namespace NMoodyMaskSystem
 		}
 
 
-		public float GetLvlOfInflToPerson(Person p = null){
+		public float GetLvlOfInflToPerson(Person pers = null){
 			foreach (Link l in InterPersonal) {
-				if (p == null) {
-					p = Empty;
+				if (pers == null) {
+					pers = Empty;
 				}
-				if(l.RoleRefs.ContainsKey(p)){
-					foreach(string s in l.RoleRefs[p].Keys){
-						return l.RoleRefs[p][s];
+				if(l.RoleRefs.ContainsKey(pers)){
+					foreach(string s in l.RoleRefs[pers].Keys){
+						return l.RoleRefs[pers][s];
 					}
 				}
 			}

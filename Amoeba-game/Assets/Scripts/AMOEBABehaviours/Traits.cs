@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class Traits : MonoBehaviour {
 
-    public GameObject TraitObj { get; protected set; }
     SpriteRenderer _traitCoreRenderer;
     List<Transform> _traitSpikes = new List<Transform>();
     List<SpriteRenderer> _traitSpikeRenderers = new List<SpriteRenderer>();

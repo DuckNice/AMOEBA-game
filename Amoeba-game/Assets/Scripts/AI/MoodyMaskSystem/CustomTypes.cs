@@ -51,6 +51,7 @@ namespace NMoodyMaskSystem
     [Serializable]
 	public class Opinion
 	{
+        //TODO: Make an opinion contain all 3 opinions instead of 1.
 		public TraitTypes Trait;
 		public Person Pers;
 		public float Value;

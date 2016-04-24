@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 
@@ -8,6 +8,8 @@ public class AnimationCalculator : MonoBehaviour {
     {
         height = (int)Mathf.Clamp(height, 1, spriteSheet.rect.height);
         width = (int)Mathf.Clamp(width, 1, spriteSheet.rect.width);
+        //TODO: Cleanup this mess. What does this function take a minimum input ? 0 or 1? (make it 0).
+        animationToGet = (int)((spriteSheet.rect.height / height) - animationToGet);
         animationToGet = (int)Mathf.Clamp(animationToGet, 1, spriteSheet.rect.height / height);
         frameToGet = (int)Mathf.Clamp(frameToGet, 1, spriteSheet.rect.width / width);
 

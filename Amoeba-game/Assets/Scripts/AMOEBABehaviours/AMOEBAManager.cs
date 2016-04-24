@@ -44,7 +44,7 @@ public class AMOEBAManager : MonoBehaviour {
 
         StartCoroutine(OpinionsLoop());
 
-        animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, () => { Animator(); }, GameManager.MinMaxEmotionSpeed.x);
+        animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, () => { EmotionAnimator(); }, GameManager.MinMaxEmotionSpeed.x);
     }
 
     
@@ -147,13 +147,27 @@ public class AMOEBAManager : MonoBehaviour {
     }
 
 
-    int currFrame = 1;
+    int _currFrame = 1000000;
+    int _animationPlaying = 1;
+    int _animationChangingTo = 2;
 
 
-    void Animator()
+    void EmotionAnimator()
     {
-        currFrame = (currFrame < GameManager.FramesInEmotionSheet) ? currFrame + 1 : 1;
+        if (_currFrame < GameManager.FramesInEmotionSheet)
+            _currFrame++;
+        else
+        {
+            _currFrame = 1;
+            _animationPlaying = _animationChangingTo;
+            do
+            {
+                _animationChangingTo = Random.Range(1, GameManager.ActiveEmotions + 1);
+            } while (_animationChangingTo == _animationPlaying);
+        }
 
-        AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.Instance.EmotionShapeSheet, 97, 97, currFrame, 1, (sprite) => { Destroy(_emotionRenderer.sprite); _emotionRenderer.sprite = sprite; });
+        int rowToTakeFrom = (_animationPlaying < _animationChangingTo) ? _animationChangingTo - 2 : _animationChangingTo -1;
+
+        AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.EmotionShapeAnimations[_animationPlaying -1], 100, 100, _currFrame, rowToTakeFrom, (sprite) => { Destroy(_emotionRenderer.sprite); _emotionRenderer.sprite = sprite; });
     }
 }

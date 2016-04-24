@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 public class GameManager : Singleton<GameManager> {
@@ -14,13 +15,20 @@ public class GameManager : Singleton<GameManager> {
         get { return Instance._AIManager.MoodyMask; }
     }
 
-    [Header("Emotion-based variables", order =1)]
+    [Header("Emotion-based variables", order = 1)]
 
-#region Emotions
-    public Sprite EmotionShapeSheet;
+    #region Emotions
     [SerializeField]
-    protected float _framesInEmotionSheet = 21;
-    public static float FramesInEmotionSheet { get { return Instance._framesInEmotionSheet; } }
+    protected List<Sprite> _emotionShapeAnimations = new List<Sprite>();
+    public static List<Sprite> EmotionShapeAnimations { get { return Instance._emotionShapeAnimations; } }
+
+    [SerializeField]
+    protected int _activeEmotions = 2;
+    public static int ActiveEmotions { get { return Instance._activeEmotions; } }
+    
+    [SerializeField]
+    protected int _framesInEmotionSheet = 60;
+    public static int FramesInEmotionSheet { get { return Instance._framesInEmotionSheet; } }
 
     [SerializeField]
     protected Vector2 _minMaxEmotionSize = new Vector2(1, 3);
@@ -31,7 +39,6 @@ public class GameManager : Singleton<GameManager> {
     public static Vector2 MinMaxEmotionSpeed { get { return Instance._minMaxEmotionSpeed; } }
 
     [SerializeField]
-    [Range(0f,1f)]
     protected Vector2 _minMaxBrightness = new Vector2(0, 1);
     public static Vector2 MinMaxBrightness { get { return Instance._minMaxBrightness; } }
 
@@ -46,6 +53,7 @@ public class GameManager : Singleton<GameManager> {
     public Color Aroused { get { return _aroused; } }
     public Color Sad { get { return _sad; } }
     #endregion
+
     [Header("Traits values", order = 2)]
     #region Traits
     [SerializeField]
@@ -70,14 +78,10 @@ public class GameManager : Singleton<GameManager> {
     public GameObject Spawnable { get { return _spawnable; } }
 
     #endregion
-    [Header("Opinion values", order = 3)]
+ //   [Header("Opinion values", order = 3)]
 #region Opinions
-    [SerializeField]
-    protected float _framesInOpinionSheet = 21;
-    public static float FramesInOpinionSheet { get { return Instance._framesInEmotionSheet; } }
 
 
-    public Sprite OpinionShapeSheet;
 #endregion
 
 
@@ -90,12 +94,6 @@ public class GameManager : Singleton<GameManager> {
             {
                 _AIManager = gameObject.AddComponent<AIManager>();
             }
-        }
-        if (EmotionShapeSheet == null ||
-            Disgusted == default(Color) || Aroused == default(Color) || ConnectionMaterial == null)
-        {
-            Debug.LogError("Fatal error: GameManager is not properly setup. Closing Application");
-            UnityEditor.EditorApplication.isPlaying = false;
         }
     }
 }

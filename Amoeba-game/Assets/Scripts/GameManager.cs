@@ -78,11 +78,22 @@ public class GameManager : Singleton<GameManager> {
     public GameObject Spawnable { get { return _spawnable; } }
 
     #endregion
- //   [Header("Opinion values", order = 3)]
-#region Opinions
+    //   [Header("Opinion values", order = 3)]
+    #region Opinions
 
+    [SerializeField]
+    protected Sprite _opinionRepresentation;
+    public static Sprite OpinionRepresentation { get { return Instance._opinionRepresentation; } }
 
-#endregion
+    [SerializeField]
+    private Color _dislikeTrait;
+    public static Color DislikeTrait { get { return Instance._dislikeTrait; } }
+
+    [SerializeField]
+    private Color _likeTrait;
+    public static Color LikeTrait { get { return Instance._likeTrait; } }
+
+    #endregion
 
 
     void Awake()

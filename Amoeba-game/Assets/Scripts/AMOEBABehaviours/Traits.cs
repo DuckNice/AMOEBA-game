@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class Traits : MonoBehaviour {
@@ -8,6 +8,7 @@ public class Traits : MonoBehaviour {
     List<SpriteRenderer> _traitSpikeRenderers = new List<SpriteRenderer>();
     SpriteRenderer _glowRenderer;
     UtilityTimer RotationMovement;
+    GameObject parent;
 
     int _lastHonestFalseFrame = -10;
 
@@ -28,11 +29,14 @@ public class Traits : MonoBehaviour {
         traits.transform.parent = parent.transform;
         traits.transform.localPosition = new Vector3(1, 0, 0);
         traits.gameObject.name = "Traits";
+        traitInst.parent = traits;
         traitInst._traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
         //TODO: These values are hard set. Make them accessible and make it evaluate the size of the surrounding circle.
         Rigidbody2D rig = traits.AddComponent<Rigidbody2D>();
         rig.gravityScale = 0;
         rig.angularDrag = 0.001f;
+        rig.mass = 0.3f;
+        rig.drag = 0.5f;
         CircleCollider2D coll = traits.AddComponent<CircleCollider2D>();
         coll.radius = 1.3f;
 
@@ -139,7 +143,28 @@ public class Traits : MonoBehaviour {
      //   transform.position = _ownPosition;
 
      //   _ownPosition = transform.position;
+
+        
     }
+
+    Vector3 parentsLastPosition; 
+    /*
+    void FixedUpdate()
+    {
+        float margin = 0.1f;
+
+        if (Mathf.Abs((parentsLastPosition - parent.transform.position).magnitude) > margin)
+        {
+            AddVelocity((parentsLastPosition - parent.transform.position) * 4);
+        }
+
+        parentsLastPosition = parent.transform.position;
+    }
+
+    void AddVelocity(Vector2 vel)
+    {
+     //   GetComponent<Rigidbody2D>().AddForce(vel, ForceMode2D.Force);
+    }*/
 
     #region TraitMovement
 

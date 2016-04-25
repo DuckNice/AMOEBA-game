@@ -16,7 +16,7 @@ public class Traits : MonoBehaviour {
         int ticksForAnimation = Random.Range((int)GameManager.Instance.MinMaxTraitRotationDuration.x, (int)GameManager.Instance.MinMaxTraitRotationDuration.y);
         float rotationSpeed = Random.Range(GameManager.Instance.MinMaxTraitRotationSpeed.x, GameManager.Instance.MinMaxTraitRotationSpeed.y);
         rotationSpeed = (Random.Range(-1,1) > 1) ? rotationSpeed : -rotationSpeed;
-
+        _ownPosition = transform.position;
         RotationMovement = UtilityTimer.CreateUtilityTimer(gameObject, () => { transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, 0.05f, ticksForAnimation);
     }
 
@@ -29,8 +29,13 @@ public class Traits : MonoBehaviour {
         traits.transform.localPosition = new Vector3(1, 0, 0);
         traits.gameObject.name = "Traits";
         traitInst._traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
+        //TODO: These values are hard set. Make them accessible and make it evaluate the size of the surrounding circle.
+        Rigidbody2D rig = traits.AddComponent<Rigidbody2D>();
+        rig.gravityScale = 0;
+        rig.angularDrag = 0.001f;
+        CircleCollider2D coll = traits.AddComponent<CircleCollider2D>();
+        coll.radius = 1.3f;
 
-        
         GameObject halo = new GameObject();
         halo.transform.parent = traits.transform;
         halo.transform.localPosition = new Vector3(0, 0, 0);
@@ -126,9 +131,14 @@ public class Traits : MonoBehaviour {
     }
     #endregion
 
+    Vector3 _ownPosition;
+
     void Update()
     {
         Rotation();
+     //   transform.position = _ownPosition;
+
+     //   _ownPosition = transform.position;
     }
 
     #region TraitMovement

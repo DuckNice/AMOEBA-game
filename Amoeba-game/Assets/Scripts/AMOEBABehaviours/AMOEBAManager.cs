@@ -47,8 +47,6 @@ public class AMOEBAManager : MonoBehaviour {
         animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, () => { EmotionAnimator(); }, GameManager.MinMaxEmotionSpeed.x);
     }
 
-    
-
 
     public void CreateConnection(AMOEBAManager other)
     {

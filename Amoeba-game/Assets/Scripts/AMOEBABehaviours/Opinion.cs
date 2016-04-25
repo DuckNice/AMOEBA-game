@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class Opinion : MonoBehaviour {
     GameObject emotion;
     GameObject myObject;
-    string _thisCharacterName;
     string _otherCharacterName;
     protected LineRenderer line;
     NMoodyMaskSystem.Person me;
@@ -24,12 +23,12 @@ public class Opinion : MonoBehaviour {
         GameObject traitObject = Instantiate(GameManager.Instance.Spawnable);
         traitObject.name = "Opinion towards " + otherCharName;
         traitObject.transform.parent = thisObject.transform;
+        //TODO: Make this not be 1000000000 rigidbodies. Make it into formulas instead.
 
         Opinion myC = traitObject.AddComponent<Opinion>();
         myC.myObject = thisObject;
         myC.me = me;
         myC.emotion = emotionObj;
-        myC._thisCharacterName = thisCharName;
         myC._otherCharacterName = otherCharName;
         myC.CreateLineRenderer();
 

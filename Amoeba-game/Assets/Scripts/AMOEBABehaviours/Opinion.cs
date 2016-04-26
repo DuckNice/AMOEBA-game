@@ -106,9 +106,7 @@ public class Opinion : MonoBehaviour {
         poss[0].z++;
         poss[1] = emotion.transform.position;
         poss[1].z++;
-
-        line.SetPositions(poss);
-
+        
         Vector3 lineVector = emotion.transform.position - myObject.transform.position;
         
         float trait2FromStart = lineVector.magnitude / 2;
@@ -116,6 +114,11 @@ public class Opinion : MonoBehaviour {
         float trait3FromStart = trait2FromStart + opinionOrbDistances;
         Vector3 unitDirection = lineVector.normalized;
         Vector3 unitRotationDirection = new Vector3(0, 0, unitDirection.z);
+
+        //TODO: Calculate this instead of just hiding
+        poss[0] += unitDirection * 4f;
+
+        line.SetPositions(poss);
 
         _trait1.transform.rotation = Quaternion.Euler(new Vector3(0,0,(-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y))-90));
         _trait1.transform.position = myObject.transform.position + (unitDirection * trait1FromStart);

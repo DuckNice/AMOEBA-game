@@ -50,11 +50,12 @@ public class AMOEBAManager : MonoBehaviour {
 
     public void CreateConnection(AMOEBAManager other)
     {
-        
-        Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
-        
-
-        _connectedInstances.Add(other);
+        if ()
+        {
+            Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
+            
+            _connectedInstances.Add(other);
+        }
     }
     
 

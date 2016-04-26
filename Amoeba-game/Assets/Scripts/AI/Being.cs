@@ -87,6 +87,11 @@ public class Being : MonoBehaviour
     
     public void Awake()
     {
+        if(GetComponent<PlayerMotion>() != null)
+        {
+            IsPlayer = true;
+        }
+
         if (Beings == null)
         {
             Beings = new List<Being>();

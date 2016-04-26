@@ -118,7 +118,7 @@ public class NPCCreator
                 yield break;
 			}
 
-            Debug.LogWarning("Setting up inter-person '" + info.PersonName + " towards '" + ((string.IsNullOrEmpty(info.TargetName) ) ? "<<No Name>>" : info.TargetName) + "' has no target. Waiting.");
+            Debug.LogWarning("Setting up inter-person '" + info.PersonName + "' towards '" + ((string.IsNullOrEmpty(info.TargetName) ) ? "<<No Name>>" : info.TargetName) + "' has no target. Waiting.");
 
 			yield return new WaitForSeconds(0.5f);
 		}

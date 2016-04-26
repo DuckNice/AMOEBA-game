@@ -1,38 +1,123 @@
 using UnityEngine;
 
+
+
 public class MotionCollection : MonoBehaviour {
-    public float _speed = 2;
-
-    [SerializeField]
-    bool _isPlayer;
-
-    private Vector3 _currentTargetPosition;
-
-
-    void Update()
+    public enum BehaviourTypes
     {
-        if(_isPlayer)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                _currentTargetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                _currentTargetPosition = new Vector3(_currentTargetPosition.x, _currentTargetPosition.y, 0);
-            }
-        }
+        aristocrat,
+        brute,
+        girl, 
+        king,
     }
 
 
-    void FixedUpdate()
+    public static void Hit(BehaviourTypes personType, MotionManager person, MotionManager otherPerson)
     {
-        if(_currentTargetPosition != default(Vector3))
-        {
-            Vector3 direction = _currentTargetPosition - transform.position;
-            this.transform.Translate((_speed * Time.fixedDeltaTime) * direction.normalized);
 
-            if(direction.magnitude < 0.1f)
-            {
-                _currentTargetPosition = default(Vector3);
-            }
-        }
+    }
+
+
+
+    public static void Walk(BehaviourTypes personType, MotionManager person, Vector3 destination)
+    {
+
+    }
+
+
+    public static void Run(BehaviourTypes personType, MotionManager person, Vector3 destination)
+    {
+
+    }
+
+
+    public static void Stumble(BehaviourTypes personType, MotionManager person, Vector3 direction, float Speed)
+    {
+        person.Move(direction, Speed);
+    }
+
+
+    public static void Threaten(BehaviourTypes personType, MotionManager person)
+    {
+
+    }
+
+
+    public static void Console(BehaviourTypes personType, MotionManager person)
+    {
+
+    }
+
+
+    public static void Kiss(BehaviourTypes personType, MotionManager person)
+    {
+
+    }
+
+
+    ////////////////////////////FOR LATER///////////////////////////77
+    public static void Drag()
+    {
+
+    }
+
+
+    public static void Dance()
+    {
+
+    }
+
+
+    public static void Talk()
+    {
+
+    }
+    
+
+    public static void TurnAway()
+    {
+
+    }
+
+
+    public static void Agree()
+    {
+
+    }
+
+
+    public static void DisAgree()
+    {
+
+    }
+
+
+    public static void Play()
+    {
+
+    }
+
+
+    public static void Sleep()
+    {
+
+    }
+
+
+    public static void Brood()
+    {
+
+    }
+
+
+    public static void Open()
+    {
+
+    }
+
+
+    public static void Close()
+    {
+
     }
 }

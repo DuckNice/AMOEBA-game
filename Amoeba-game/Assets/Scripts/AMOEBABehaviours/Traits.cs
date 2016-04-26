@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class Traits : MonoBehaviour {
@@ -27,7 +27,7 @@ public class Traits : MonoBehaviour {
         GameObject traits = new GameObject();
         Traits traitInst = traits.AddComponent<Traits>();
         traits.transform.parent = parent.transform;
-        traits.transform.localPosition = new Vector3(1, 0, 0);
+        traits.transform.localPosition = new Vector3(1, -1, 0);
         traits.gameObject.name = "Traits";
         traitInst.parent = traits;
         traitInst._traitCoreRenderer = traits.AddComponent<SpriteRenderer>();

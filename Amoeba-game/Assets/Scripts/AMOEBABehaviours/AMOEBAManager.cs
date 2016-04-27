@@ -50,12 +50,13 @@ public class AMOEBAManager : MonoBehaviour {
 
     public void CreateConnection(AMOEBAManager other)
     {
-        if ()
-        {
+        //TODO: Make connection only appear if there is an opinion. LONGER FIX: make an opinion appear which is blank.
+     //   if ()
+     //   {
             Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
             
             _connectedInstances.Add(other);
-        }
+     //   }
     }
     
 

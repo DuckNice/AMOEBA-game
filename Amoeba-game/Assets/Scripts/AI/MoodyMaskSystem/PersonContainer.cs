@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 
 namespace NMoodyMaskSystem
@@ -12,7 +12,7 @@ namespace NMoodyMaskSystem
         {
             if ((person.GetLinks(TypeMask.selfPerc))[0] != null)
             {
-                personName = personName.ToLower();
+                personName = personName.ToLower().Trim();
                 People.Add(personName, person);
                 PeopleNames.Add(personName);
             }
@@ -26,7 +26,7 @@ namespace NMoodyMaskSystem
 
         public Person GetPerson(string name)
         {
-            name = name.ToLower();
+            name = name.ToLower().Trim();
 
             if (People.ContainsKey(name))
             {

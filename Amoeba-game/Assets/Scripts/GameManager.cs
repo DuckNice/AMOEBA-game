@@ -18,6 +18,13 @@ public class GameManager : Singleton<GameManager> {
     [Header("Emotion-based variables", order = 1)]
 
     #region Emotions
+
+    public bool UseUnityAlphaBlending = false;
+
+    [SerializeField]
+    protected List<Sprite> _emotionShapesNoAnimations = new List<Sprite>();
+    public static List<Sprite> EmotionShapesNoAnimations { get { return Instance._emotionShapesNoAnimations; } }
+
     [SerializeField]
     protected List<Sprite> _emotionShapeAnimations = new List<Sprite>();
     public static List<Sprite> EmotionShapeAnimations { get { return Instance._emotionShapeAnimations; } }
@@ -28,7 +35,7 @@ public class GameManager : Singleton<GameManager> {
     
     [SerializeField]
     protected int _framesInEmotionSheet = 60;
-    public static int FramesInEmotionSheet { get { return Instance._framesInEmotionSheet; } }
+    public static int FramesInEmotionAnimation { get { return Instance._framesInEmotionSheet; } }
 
     [SerializeField]
     protected Vector2 _minMaxEmotionSize = new Vector2(1, 3);

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class Traits : MonoBehaviour {
@@ -37,8 +37,8 @@ public class Traits : MonoBehaviour {
         rig.angularDrag = 0.001f;
         rig.mass = 0.3f;
         rig.drag = 0.5f;
-        CircleCollider2D coll = traits.AddComponent<CircleCollider2D>();
-        coll.radius = 1.3f;
+      //  CircleCollider2D coll = traits.AddComponent<CircleCollider2D>();
+   //     coll.radius = 1.3f;
 
         GameObject halo = new GameObject();
         halo.transform.parent = traits.transform;

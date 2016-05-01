@@ -34,6 +34,8 @@ public class Opinion : MonoBehaviour {
         myC._otherCharacterName = otherCharName;
         myC.CreateOpinionLine();
 
+        myC.Update();
+
         return myC;
     }
 
@@ -53,7 +55,22 @@ public class Opinion : MonoBehaviour {
 
                 DrawOpinion();
             }
+            else
+            {
+#if ALL_DEBUG_MODE || AMOEBA_DEBUG_MODE
+                Debug.LogWarning("Warning: " + me.Name.Trim().ToLower() + "'s opinion towards " + _otherCharacterName.Trim().ToLower() + " was not found. Hiding opinion.");
+#endif
+                HideOpinion();
+            }
         }
+    }
+
+    public void HideOpinion()
+    {
+        line.gameObject.SetActive(false);
+        _trait1.gameObject.SetActive(false);
+        _trait2.gameObject.SetActive(false);
+        _trait3.gameObject.SetActive(false);
     }
 
 
@@ -99,6 +116,12 @@ public class Opinion : MonoBehaviour {
 
     void DrawOpinion()
     {
+        line.gameObject.SetActive(true);
+        _trait1.gameObject.SetActive(true);
+        _trait2.gameObject.SetActive(true);
+        _trait3.gameObject.SetActive(true);
+        
+
         Vector3[] poss = new Vector3[2];
         //TODO: make public
         float opinionOrbDistances = 1;

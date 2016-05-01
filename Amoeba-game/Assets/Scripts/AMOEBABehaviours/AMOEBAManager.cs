@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor.Animations;
 using System.Collections;
 using System.Collections.Generic;
 using NMoodyMaskSystem;
@@ -20,11 +21,13 @@ public class AMOEBAManager : MonoBehaviour {
     protected static WaitForSeconds _waitforO5 = new WaitForSeconds(0.5f);
     protected List<GameObject> _opinions = new List<GameObject>();
     protected UtilityTimer animationTimer;
+    [SerializeField]
+    AnimatorController _emotionAnimator;
 
     SpriteRenderer _emotionRenderer;
     
     public Traits Traits{ get; private set; }
-
+    Animator _emotionAnim;
 
     void Awake()
     {
@@ -34,15 +37,25 @@ public class AMOEBAManager : MonoBehaviour {
 
     void Start()
     {
+        Being being = GetComponent<Being>();
+
+        if(being != null)
+        {
+            CharacterName = being.Name;
+        }
+
         GameObject emotions = new GameObject();
         _emotionRenderer = emotions.AddComponent<SpriteRenderer>();
         emotions.transform.parent = transform;
         emotions.transform.localPosition = new Vector3(0, 1, 0);
         emotions.gameObject.name = "Emotion";
+        _emotionAnim = emotions.gameObject.AddComponent<Animator>();
+        _emotionAnim.runtimeAnimatorController = _emotionAnimator;
 
         Traits = Traits.BuildTrait(gameObject);
 
         StartCoroutine(OpinionsLoop());
+
 
         animationTimer = UtilityTimer.CreateUtilityTimer(gameObject, () => { EmotionAnimator(); }, GameManager.MinMaxEmotionSpeed.x);
     }
@@ -134,6 +147,11 @@ public class AMOEBAManager : MonoBehaviour {
         {
             float relSpeed = (GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired;
             animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.x + relSpeed;
+
+            if (GameManager.Instance.UseUnityAlphaBlending)
+            {
+                _emotionAnim.SetFloat("Speed", (GameManager.MinMaxEmotionSpeed.x + relSpeed) * GameManager.FramesInEmotionAnimation);
+            }
         }
 
 
@@ -151,23 +169,25 @@ public class AMOEBAManager : MonoBehaviour {
     int _animationPlaying = 1;
     int _animationChangingTo = 2;
 
-
     void EmotionAnimator()
     {
-        if (_currFrame < GameManager.FramesInEmotionSheet)
-            _currFrame++;
-        else
+        if (!GameManager.Instance.UseUnityAlphaBlending)
         {
-            _currFrame = 1;
-            _animationPlaying = _animationChangingTo;
-            do
+            if (_currFrame < GameManager.FramesInEmotionAnimation)
+                _currFrame++;
+            else
             {
-                _animationChangingTo = Random.Range(1, GameManager.ActiveEmotions + 1);
-            } while (_animationChangingTo == _animationPlaying);
+                _currFrame = 1;
+                _animationPlaying = _animationChangingTo;
+                do
+                {
+                    _animationChangingTo = Random.Range(1, GameManager.ActiveEmotions + 1);
+                } while (_animationChangingTo == _animationPlaying);
+            }
+
+            int rowToTakeFrom = (_animationPlaying < _animationChangingTo) ? _animationChangingTo - 2 : _animationChangingTo - 1;
+
+            AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.EmotionShapeAnimations[_animationPlaying - 1], 100, 100, _currFrame, rowToTakeFrom, (sprite) => { Destroy(_emotionRenderer.sprite); _emotionRenderer.sprite = sprite; });
         }
-
-        int rowToTakeFrom = (_animationPlaying < _animationChangingTo) ? _animationChangingTo - 2 : _animationChangingTo -1;
-
-        AnimationCalculator.CalculateSpriteBasedForFrame(GameManager.EmotionShapeAnimations[_animationPlaying -1], 100, 100, _currFrame, rowToTakeFrom, (sprite) => { Destroy(_emotionRenderer.sprite); _emotionRenderer.sprite = sprite; });
     }
 }

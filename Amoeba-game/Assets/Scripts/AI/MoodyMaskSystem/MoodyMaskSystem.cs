@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 
@@ -67,7 +67,7 @@ namespace NMoodyMaskSystem
 
         public void CreateNewMask(string nameOfMask, float[] traits = null, TypeMask maskType = TypeMask.interPers, string[] roles = null) 
         {
-            nameOfMask = nameOfMask.ToLower();
+            nameOfMask = nameOfMask.ToLower().Trim();
 
             List<Trait> newTraits = new List<Trait>();
             
@@ -104,11 +104,11 @@ namespace NMoodyMaskSystem
 
         public void CreateNewRule(string ruleName, string actName, RuleConditioner ruleCondition = null, RulePreference rulePreference = null, VisibilityCalculator visCalc = null)
         {
-           ruleName = ruleName.ToLower();
-           actName = actName.ToLower();
+           ruleName = ruleName.ToLower().Trim();
+           actName = actName.ToLower().Trim();
            
            if(PplAndMasks.FindRule(ruleName) == null){
-               PplAndMasks.CreateNewRule(ruleName, PosActions[actName.ToLower()], new RuleInfoCont(ruleCondition, rulePreference, visCalc));
+               PplAndMasks.CreateNewRule(ruleName, PosActions[actName.ToLower().Trim()], new RuleInfoCont(ruleCondition, rulePreference, visCalc));
            }
            else
            {
@@ -178,7 +178,7 @@ namespace NMoodyMaskSystem
         
         public Person GetPerson(string name)
         {
-            return PplAndMasks.GetPerson(name.ToLower());
+            return PplAndMasks.GetPerson(name.ToLower().Trim());
         }
     }
 }

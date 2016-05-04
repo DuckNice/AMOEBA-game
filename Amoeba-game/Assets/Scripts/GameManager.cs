@@ -3,6 +3,24 @@ using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 public class GameManager : Singleton<GameManager> {
+    [SerializeField]
+    bool _gameOn = true;
+    public static bool GameOn { get { return Instance._gameOn; } private set { Instance._gameOn = value; } }
+    public static void ToggleGameOn(bool on)
+    {
+        GameOn = on;
+    }
+
+    [SerializeField]
+    bool _UIAccessible = true;
+    public static bool UIAccessible { get { return Instance._UIAccessible; } private set { Instance._UIAccessible = value; } }
+    public static void ToggleUIAccessible(bool on)
+    {
+        UIAccessible = on;
+    }
+
+    [SerializeField]
+    public KeyHoldEnable KeyHoldManager { get; protected set;}
     public static float Time { get; protected set; }
     [SerializeField]
     protected AIManager _AIManager;

@@ -8,17 +8,18 @@ public class Traits : MonoBehaviour {
     List<SpriteRenderer> _traitSpikeRenderers = new List<SpriteRenderer>();
     SpriteRenderer _glowRenderer;
     UtilityTimer RotationMovement;
-    GameObject parent;
+ //   GameObject parent;
 
     int _lastHonestFalseFrame = -10;
+
 
     void Start()
     {
         int ticksForAnimation = Random.Range((int)GameManager.Instance.MinMaxTraitRotationDuration.x, (int)GameManager.Instance.MinMaxTraitRotationDuration.y);
         float rotationSpeed = Random.Range(GameManager.Instance.MinMaxTraitRotationSpeed.x, GameManager.Instance.MinMaxTraitRotationSpeed.y);
         rotationSpeed = (Random.Range(-1,1) > 1) ? rotationSpeed : -rotationSpeed;
-        _ownPosition = transform.position;
-        RotationMovement = UtilityTimer.CreateUtilityTimer(gameObject, () => { transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, 0.05f, ticksForAnimation);
+  //      _ownPosition = transform.position;
+        RotationMovement = UtilityTimer.CreateUtilityTimer(gameObject, () => { if (GameManager.GameOn) transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, 0.05f, ticksForAnimation);
     }
 
 #region BuildTraitFunctionality
@@ -29,7 +30,7 @@ public class Traits : MonoBehaviour {
         traits.transform.parent = parent.transform;
         traits.transform.localPosition = new Vector3(1, -1, 0);
         traits.gameObject.name = "Traits";
-        traitInst.parent = traits;
+     //   traitInst.parent = traits;
         traitInst._traitCoreRenderer = traits.AddComponent<SpriteRenderer>();
         //TODO: These values are hard set. Make them accessible and make it evaluate the size of the surrounding circle.
         Rigidbody2D rig = traits.AddComponent<Rigidbody2D>();
@@ -65,7 +66,7 @@ public class Traits : MonoBehaviour {
                     _traitSpikes.Add(spawned.transform);
                     spawned.name = "Trait spike";
                     spawned.transform.SetParent(transform, false);
-
+                    
                     SpriteRenderer renderer = spawned.GetComponent<SpriteRenderer>();
                     _traitSpikeRenderers.Add((renderer != null) ? renderer : spawned.gameObject.AddComponent<SpriteRenderer>());
                 }
@@ -135,7 +136,7 @@ public class Traits : MonoBehaviour {
     }
     #endregion
 
-    Vector3 _ownPosition;
+  //  Vector3 _ownPosition;
 
     void Update()
     {
@@ -176,7 +177,7 @@ public class Traits : MonoBehaviour {
             float rotationSpeed = Random.Range(GameManager.Instance.MinMaxTraitRotationSpeed.x, GameManager.Instance.MinMaxTraitRotationSpeed.y);
             rotationSpeed = (Random.Range(0f, 2f) > 1f) ? rotationSpeed : -rotationSpeed;
 
-            RotationMovement.UpdateDelegate(() => { transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, ticksForAnimation);
+            RotationMovement.UpdateDelegate(() => { if(GameManager.GameOn) transform.Rotate(new Vector3(0, 0, rotationSpeed)); }, ticksForAnimation);
         }
     }
     

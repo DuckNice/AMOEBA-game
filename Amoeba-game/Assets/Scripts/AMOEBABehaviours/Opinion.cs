@@ -136,7 +136,6 @@ public class Opinion : MonoBehaviour {
         float trait1FromStart = trait2FromStart - opinionOrbDistances;
         float trait3FromStart = trait2FromStart + opinionOrbDistances;
         Vector3 unitDirection = lineVector.normalized;
-        Vector3 unitRotationDirection = new Vector3(0, 0, unitDirection.z);
 
         //TODO: Calculate this instead of just hiding
         poss[0] += unitDirection * 4f;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TutorialItem : MonoBehaviour 
 {
@@ -7,28 +8,35 @@ public class TutorialItem : MonoBehaviour
     public float HighLightSpeed = 1f;
     public float HighLightScale = 1.3f;
     protected Vector3 OriginalScale;
+    protected UnityAction BaseContinueTrigger;
+
 
 	protected virtual void OnEnable()
 	{
 		GameManager.ToggleGameOn (false);
-
-		gameObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener( 
+        
+        gameObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener( 
 		()=>{
-			if(NextTutItem != null)
-			{
-				NextTutItem.gameObject.SetActive(true);
-			}
-			else
-			{
-				GameManager.ToggleGameOn (true);
-			}
-			gameObject.SetActive(false);
-		});
+            BaseContinueTrigger();
+        });
 	}
 
 
     protected virtual void Awake()
     {
+        BaseContinueTrigger = () =>
+        {
+            if (NextTutItem != null)
+            {
+                NextTutItem.gameObject.SetActive(true);
+            }
+            else
+            {
+                GameManager.ToggleGameOn(true);
+            }
+            gameObject.SetActive(false);
+        };
+
         if (ItemToHighlight != null)
         {
             OriginalScale = ItemToHighlight.transform.localScale;

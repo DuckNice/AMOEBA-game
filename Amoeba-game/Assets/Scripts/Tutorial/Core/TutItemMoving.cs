@@ -26,7 +26,8 @@ public class TutItemMoving : TutorialItem
         if (StartedMoving && !SetButton)
         {
             base.OnEnable();
-
+            GetComponent<UnityEngine.UI.Button>().interactable = true;
+            GameManager.ToggleGameOn(true);
             SetButton = true;
         }
 

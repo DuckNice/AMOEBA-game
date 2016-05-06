@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class TutorialItem : MonoBehaviour 
 {
-    public GameObject ItemToHighlight;
+    public List<GameObject> ItemsToActivate = new List<GameObject>();
+    public List<GameObject> ItemsToHighlight = new List<GameObject>();
 	public TutorialItem NextTutItem;
     public float HighLightSpeed = 1f;
     public float HighLightScale = 1.3f;
-    protected Vector3 OriginalScale;
+    protected List<Vector3> OriginalScales = new List<Vector3>();
     protected UnityAction BaseContinueTrigger;
 
 
@@ -19,7 +21,7 @@ public class TutorialItem : MonoBehaviour
 		()=>{
             BaseContinueTrigger();
         });
-	}
+    }
 
 
     protected virtual void Awake()
@@ -37,9 +39,20 @@ public class TutorialItem : MonoBehaviour
             gameObject.SetActive(false);
         };
 
-        if (ItemToHighlight != null)
+        if (ItemsToHighlight != null)
         {
-            OriginalScale = ItemToHighlight.transform.localScale;
+            foreach (GameObject ItemToHighlight in ItemsToHighlight)
+            {
+                OriginalScales.Add(ItemToHighlight.transform.localScale);
+            }
+        }
+
+        if (ItemsToActivate != null)
+        {
+            foreach (GameObject item in ItemsToActivate)
+            {
+                item.SetActive(true);
+            }
         }
     }
 
@@ -48,7 +61,7 @@ public class TutorialItem : MonoBehaviour
     bool _up = true;
     protected virtual void Update()
     {
-        if(ItemToHighlight != null)
+        if(ItemsToHighlight != null)
         {
             _time += ((_up) ? 1:-1) * Time.deltaTime * HighLightSpeed;
             if (_up && _time > 1f)
@@ -59,16 +72,29 @@ public class TutorialItem : MonoBehaviour
             //  float additive = Vector3.Lerp(OriginalScale * (HighLightScale * -0.5f), OriginalScale * (HighLightScale * 0.5f), _time);
             //  additive = Mathf.Sin(Time.time * HighLightSpeed) * HighLightScale;
 
-            ItemToHighlight.transform.localScale =
-                Vector3.Lerp(OriginalScale, OriginalScale * HighLightScale, _time);
+            for (int i = 0; i < ItemsToHighlight.Count; i++)
+            {
+                ItemsToHighlight[i].transform.localScale =
+                Vector3.Lerp(OriginalScales[i], OriginalScales[i] * HighLightScale, _time);
+            }
         }
     }
 
     protected void OnDisable()
     {
-        if (ItemToHighlight != null)
+        if (ItemsToHighlight != null)
         {
-            ItemToHighlight.transform.localScale = OriginalScale;
+            for(int i = 0; i < ItemsToHighlight.Count; i++)
+            {
+                ItemsToHighlight[i].transform.localScale = OriginalScales[i];
+            }
+        }
+        if (ItemsToActivate != null)
+        {
+            foreach(GameObject item in ItemsToActivate)
+            {
+                item.SetActive(false);
+            }
         }
     }
 }

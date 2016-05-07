@@ -1,15 +1,43 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NMoodyMaskSystem;
 
-public class StoryRecognizer : MonoBehaviour {
+public struct StructureContainer
+{
+    public List<StorySegment> Structure { get; private set; }
+    public float Fitness { get; private set; }
 
-    public static void Predict5ClosestStructures(List<Person> peopleToAccountFor, StructureLibrary library)
+    public StructureContainer(List<StorySegment> structure, float fitness)
     {
-        foreach (List<StorySegment> structure in library.StoryStructures)
-        {
+        Structure = structure;
+        Fitness = fitness;
+    }
+}
 
+public class StoryRecognizer : MonoBehaviour {
+    public static List<StorySegment> PredictClosestStructure(List<Person> peopleToAccountFor, StructureLibrary structureLibrary)
+    {
+        List<StructureContainer> go = new List<StructureContainer>();
+
+        foreach (List<StorySegment> structure in structureLibrary.StoryStructures)
+        {
+            go.AddRange(StoryPredicter.Get5BestStructures(structure));
         }
+
+
+        StructureContainer bestContainer = default(StructureContainer);
+
+        foreach (StructureContainer strucCont in go)
+        {
+            if (bestContainer.Equals(default(StructureContainer)))
+                bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
+            else
+                bestContainer = strucCont;
+        }
+
+
+        return bestContainer.Structure;
     }
 }

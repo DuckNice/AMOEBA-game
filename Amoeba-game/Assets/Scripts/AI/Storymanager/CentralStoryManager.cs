@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 public class CentralStoryManager : MonoBehaviour {
-    
+    StructureLibrary strucLib;
+    List<StorySegment> currentStory = new List<StorySegment>();
+    WaitForSeconds selectionWaiter = new WaitForSeconds(5);
 
 
-	void Start () {
-	    
-	}
+    void Start () {
+        StartCoroutine(StorySelector());
+    }
 
 	
 	void Update () {
@@ -18,6 +21,8 @@ public class CentralStoryManager : MonoBehaviour {
 
     protected IEnumerator StorySelector()
     {
-        yield break;
+        currentStory = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople(), strucLib);
+
+        yield return selectionWaiter; 
     }
 }

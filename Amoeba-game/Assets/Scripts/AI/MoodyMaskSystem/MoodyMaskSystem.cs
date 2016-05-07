@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace NMoodyMaskSystem
@@ -43,6 +44,20 @@ namespace NMoodyMaskSystem
             }
 
             return list;
+        }
+
+
+        public List<Person> GetUpdateList(string name)
+        {
+            name = name.ToLower().Trim();
+            if (UpdateLists.ContainsKey(name))
+            {
+                return UpdateLists[name];
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
@@ -179,6 +194,11 @@ namespace NMoodyMaskSystem
         public Person GetPerson(string name)
         {
             return PplAndMasks.GetPerson(name.ToLower().Trim());
+        }
+
+        public List<Person> GetAllPeople()
+        {
+            return PplAndMasks.People.Values.ToList();
         }
     }
 }

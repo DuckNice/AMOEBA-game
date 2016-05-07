@@ -153,13 +153,13 @@ public class Being : MonoBehaviour
 	public float ActionStartTime;
 
     
-	public void NPCAction(float time)
+	public void NPCAction(float time, bool forced)
 	{
 		if (!GameManager.AIManager.MoodyMask.PlayerName.Contains(Name.ToLower()))
         {
             Person self = GameManager.AIManager.MoodyMask.PplAndMasks.GetPerson(Name);
 
-            if (CurrentRule != null && ActionStartTime + CurrentRule.ActionToTrigger.Duration > time)
+            if (CurrentRule != null && ActionStartTime + CurrentRule.ActionToTrigger.Duration > time && !forced)
             {
                 CurrentRule.SustainAction(self, CurrentRule.SelfOther[self].Person, CurrentRule);
             }

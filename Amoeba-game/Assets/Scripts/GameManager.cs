@@ -132,4 +132,13 @@ public class GameManager : Singleton<GameManager> {
             }
         }
     }
+
+
+    void Update()
+    {
+        if(GameOn)
+        {
+            Time += UnityEngine.Time.deltaTime;
+        }
+    }
 }

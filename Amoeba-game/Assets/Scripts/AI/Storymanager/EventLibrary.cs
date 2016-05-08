@@ -5,7 +5,21 @@ using System.Collections.Generic;
 public class EventLibrary : MonoBehaviour {
     
 
-
+   // eat
+   // hit
+   // retaliate
+   // warn
+   // wait
+   // play 
+   // watch out
+   // work
+   // brew
+   // sleep
+   // flee
+   // chase
+   
+    
+    
 	// Use this for initialization
 	void Start () {
 	    

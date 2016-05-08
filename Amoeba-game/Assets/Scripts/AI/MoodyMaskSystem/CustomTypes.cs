@@ -158,7 +158,7 @@ namespace NMoodyMaskSystem
         }
     };
 
-    public delegate void ActionInvoker(Person subject, Person direct, Person[] indiPpl = null, object[] misc = null);
+    public delegate void ActionInvoker(UnityEngine.UI.Text text, Person subject, Person direct, Person[] indiPpl = null,  object[] misc = null);
 
 	public delegate bool RuleConditioner(Person self, Person other, Person[] indiPpl = null);
 

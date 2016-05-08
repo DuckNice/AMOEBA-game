@@ -8,11 +8,11 @@ public class AMOEBAManager : MonoBehaviour {
     public string CharacterName;
     [SerializeField]
     [Tooltip("The max distance distance to a target connections are shown at")]
-    protected float _connectionDistance = 2;
+    protected float _connectionDistance = 80;
     public float ConnectionDistance { get { return _connectionDistance; } protected set { _connectionDistance = value; } }
     [SerializeField]
     [Tooltip("For optimization: The max distance to a target ")]
-    protected float _consideranceRadius = 10;
+    protected float _consideranceRadius = 800;
 
     protected static List<AMOEBAManager> _instances = new List<AMOEBAManager>();
     protected List<AMOEBAManager> _notableInstances = new List<AMOEBAManager>();
@@ -64,11 +64,15 @@ public class AMOEBAManager : MonoBehaviour {
     public void CreateConnection(AMOEBAManager other)
     {
         //TODO: Make connection only appear if there is an opinion. LONGER FIX: make an opinion appear which is blank.
-     //   if ()
-     //   {
+        //   if ()
+        //   {
+        if (other.CharacterName != null && other.Traits != null)
+        {
+
             Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
-            
+
             _connectedInstances.Add(other);
+        }
      //   }
     }
     

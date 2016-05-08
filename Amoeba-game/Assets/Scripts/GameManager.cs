@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 public class GameManager : Singleton<GameManager> {
+
+    public GameObject pauseScreen;
     [SerializeField]
     bool _gameOn = true;
     public static bool GameOn { get { return Instance._gameOn; } private set { Instance._gameOn = value; } }
@@ -103,7 +105,7 @@ public class GameManager : Singleton<GameManager> {
     public GameObject Spawnable { get { return _spawnable; } }
 
     #endregion
-    //   [Header("Opinion values", order = 3)]
+       [Header("Opinion values", order = 3)]
     #region Opinions
 
     [SerializeField]

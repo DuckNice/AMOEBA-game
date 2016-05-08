@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 public class CentralStoryManager : MonoBehaviour {
-    StructureLibrary strucLib;
+    StructureLibrary strucLib = new StructureLibrary();
+
     List<StorySegment> currentStory = new List<StorySegment>();
     WaitForSeconds selectionWaiter = new WaitForSeconds(5);
 
 
     void Start () {
+        
         StartCoroutine(StorySelector());
     }
 

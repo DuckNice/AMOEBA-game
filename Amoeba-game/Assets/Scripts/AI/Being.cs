@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
     //Namespaces
 using NMoodyMaskSystem;
@@ -148,20 +149,77 @@ public class Being : MonoBehaviour
 
     
     [HideInInspector]
-	public Rule CurrentRule;
+    public Rule CurrentRule { get; protected set; }
     [HideInInspector]
-	public float ActionStartTime;
+    public float ActionStartTime { get; protected set; }
+    public UnityEngine.UI.Text text;
 
-    
-	public void NPCAction(float time, bool forced)
+
+    public void playerInput(string input)
+    {
+        input = input.ToLower();
+
+        string[] seps = { " " };
+
+        string[] sepInput = input.Split(seps, StringSplitOptions.RemoveEmptyEntries);
+
+        if (sepInput != null && sepInput.Length > 0)
+        {
+            if (GameManager.MoodyMask.PosActions.ContainsKey(sepInput[0]))
+            {
+                if (GameManager.MoodyMask.UpdateLists["Main"].Exists( x => x.Name == "Kasper".ToLower().Trim()))
+                {
+                    MAction actionToDo = GameManager.MoodyMask.PosActions[sepInput[0]];
+
+                    if (sepInput.Length > 1)
+                    {
+                        Person target = GameManager.MoodyMask.PplAndMasks.GetPerson(sepInput[1]);
+
+                        if (target != null)
+                        {
+                            Person self = GameManager.MoodyMask.GetPerson("Kasper".ToLower().Trim());
+
+                            actionToDo.DoAction(text, self, target, self.GetRule(actionToDo.Name));
+                        }
+                        else
+                        {
+                            text.text = "Error: didn't recognize '" + sepInput[1] + "'.";
+
+                        }
+                    }
+                    else if (!actionToDo.NeedsDirect)
+                    {
+                        Person self = GameManager.MoodyMask.GetPerson("Kasper".ToLower().Trim());
+
+                        actionToDo.DoAction(text, self, null, self.GetRule(actionToDo.Name));
+                    }
+                    else
+                    {
+                        text.text = "Action needs a target person.";
+                    }
+                }
+                else
+                {
+                    text.text = "You are dead! You can't do anything!";
+                }
+            }
+            else
+            {
+                text.text =  sepInput[0] + " not recognized.";
+            }
+        }
+    }
+
+
+    public void NPCAction(float time, bool forced)
 	{
-		if (!GameManager.AIManager.MoodyMask.PlayerName.Contains(Name.ToLower()))
+		if (!GameManager.AIManager.MoodyMask.PlayerName.Contains(Name.ToLower()) && !IsPlayer)
         {
             Person self = GameManager.AIManager.MoodyMask.PplAndMasks.GetPerson(Name);
 
             if (CurrentRule != null && ActionStartTime + CurrentRule.ActionToTrigger.Duration > time && !forced)
             {
-                CurrentRule.SustainAction(self, CurrentRule.SelfOther[self].Person, CurrentRule);
+                CurrentRule.SustainAction(text, self, CurrentRule.SelfOther[self].Person, CurrentRule);
             }
             else
             {
@@ -172,7 +230,7 @@ public class Being : MonoBehaviour
                     CurrentRule = _rule;
                     ActionStartTime = time;
 
-                    _rule.DoAction(self, _rule.SelfOther[self].Person, _rule);
+                    _rule.DoAction(text, self, _rule.SelfOther[self].Person, _rule);
                 }
                 else
                 {

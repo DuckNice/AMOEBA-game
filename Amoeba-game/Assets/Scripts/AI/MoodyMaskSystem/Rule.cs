@@ -112,12 +112,12 @@ namespace NMoodyMaskSystem
         }
 
 
-		public void DoAction(Person subject, Person dirObject, Rule rule, Person[] indPpl = null, object[] misc = null){
-			ActionToTrigger.DoAction (subject, dirObject,rule, indPpl, misc);
+        public void DoAction(UnityEngine.UI.Text text, Person subject, Person dirObject, Rule rule, Person[] indPpl = null, object[] misc = null){
+			ActionToTrigger.DoAction (text, subject, dirObject,rule, indPpl, misc);
 		}
 
-		public void SustainAction(Person subject, Person dirObject, Rule rule, Person[] indPpl = null, object[] misc = null){
-			ActionToTrigger.DoSustainAction (subject, dirObject,rule, indPpl, misc);
+        public void SustainAction(UnityEngine.UI.Text text, Person subject, Person dirObject, Rule rule, Person[] indPpl = null, object[] misc = null){
+			ActionToTrigger.DoSustainAction (text, subject, dirObject,rule, indPpl, misc);
 		}
 
         public float GetRuleStrength() { return _strength; }

@@ -57,12 +57,12 @@
         /// <param name="r"></param>
         /// <param name="inPpl"></param>
         /// <param name="misc"></param>
-        public void DoAction(Person sub, Person dr, Rule r, Person[] inPpl = null, object[] misc = null)
+        public void DoAction(UnityEngine.UI.Text text, Person sub, Person dr, Rule r, Person[] inPpl = null, object[] misc = null)
         { //SUBJECT, VERB, OBB, DIROBJ    Setup
 
 			if(_actionInvoker != null)
             {
-                _actionInvoker(sub, dr, inPpl, misc);
+                _actionInvoker(text, sub, dr, inPpl, misc);
 			}
 			else
             {
@@ -79,11 +79,11 @@
         /// <param name="r">rule</param>
         /// <param name="inPpl">indirectPeople</param>
         /// <param name="misc">miscelaneous</param>
-        public void DoSustainAction(Person sub, Person dr, Rule r, Person[] inPpl = null, object[] misc = null)
+        public void DoSustainAction(UnityEngine.UI.Text text, Person sub, Person dr, Rule r, Person[] inPpl = null, object[] misc = null)
         { //SUBJECT, VERB, OBB, DIROBJ    Setup
             if (_sustainActionInvoker != null)
             {
-                _sustainActionInvoker(sub, dr, inPpl, misc);
+                _sustainActionInvoker(text, sub, dr, inPpl, misc);
             }
             else
             {

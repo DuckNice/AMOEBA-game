@@ -132,7 +132,7 @@ public class Opinion : MonoBehaviour {
         
         Vector3 lineVector = emotion.transform.position - myObject.transform.position;
         
-        float trait2FromStart = lineVector.magnitude / 2;
+        float trait2FromStart = lineVector.magnitude / 3;
         float trait1FromStart = trait2FromStart - opinionOrbDistances;
         float trait3FromStart = trait2FromStart + opinionOrbDistances;
         Vector3 unitDirection = lineVector.normalized;

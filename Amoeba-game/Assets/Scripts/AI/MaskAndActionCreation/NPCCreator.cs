@@ -28,7 +28,7 @@ public class NPCCreator
     public static void CreateMask(MoodyMaskSystem MoodyMask, string maskName)
     {
         try {
-            Type mask = Type.GetType(maskName);
+            Type mask = Type.GetType("NMoodyMaskSetup."+maskName);
             MethodInfo method = mask.GetMethod("CreateMask");
 
             if (method != null)

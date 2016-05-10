@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class PlayerMotion : MonoBehaviour {
+    public static Vector2 MouseClicked { get; private set; }
+    public static bool RightClick { get; private set; }
     public float _speed = 5;
     public static bool CanMove = true;
 
@@ -9,16 +11,23 @@ public class PlayerMotion : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && GameManager.GameOn && CanMove)
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
+            MouseClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            /*
             _currentTargetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _currentTargetPosition = new Vector3(_currentTargetPosition.x, _currentTargetPosition.y, 0);
+            */
         }
+
+        RightClick = Input.GetMouseButtonDown(1);
     }
 
 
     void FixedUpdate()
     {
+        /*
         if (_currentTargetPosition != default(Vector3) && GameManager.GameOn && CanMove)
         {
             Vector3 direction = _currentTargetPosition - transform.position;
@@ -28,6 +37,6 @@ public class PlayerMotion : MonoBehaviour {
             {
                 _currentTargetPosition = default(Vector3);
             }
-        }
+        }*/
     }
 }

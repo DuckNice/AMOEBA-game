@@ -13,13 +13,15 @@ public class AMOEBAManager : MonoBehaviour {
     [SerializeField]
     [Tooltip("For optimization: The max distance to a target ")]
     protected float _consideranceRadius = 800;
+    [SerializeField]
+    float ClickRadius = 2f;
 
     protected static List<AMOEBAManager> _instances = new List<AMOEBAManager>();
     protected List<AMOEBAManager> _notableInstances = new List<AMOEBAManager>();
     protected List<AMOEBAManager> _connectedInstances = new List<AMOEBAManager>();
 
     protected static WaitForSeconds _waitforO5 = new WaitForSeconds(0.5f);
-    protected List<GameObject> _opinions = new List<GameObject>();
+    protected List<Opinion> _opinions = new List<Opinion>();
     protected UtilityTimer animationTimer;
     [SerializeField]
     AnimatorController _emotionAnimator;
@@ -69,7 +71,7 @@ public class AMOEBAManager : MonoBehaviour {
         if (other.CharacterName != null && other.Traits != null)
         {
 
-            Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
+            _opinions.Add(Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject));
 
             _connectedInstances.Add(other);
         }
@@ -166,6 +168,62 @@ public class AMOEBAManager : MonoBehaviour {
 
         
         Traits.UpdateTraits(niceNasty, charGreed, honFalse);
+
+
+
+        ToggleIsSelected();
+        ShouldShowActionBar();
+    }
+
+    void ShouldShowActionBar()
+    {
+        if (Mathf.Pow((PlayerMotion.MouseClicked.x - transform.position.x), 2) + Mathf.Pow((PlayerMotion.MouseClicked.y - transform.position.y), 2) < Mathf.Pow(ClickRadius, 2) && PlayerMotion.RightClick)
+        {
+            GameManager.Instance.playerActionSelection.ToggleActionSelection(CharacterName, true);
+        }
+    }
+
+    public void ToggleIsSelected()
+    {
+        if(Mathf.Pow((PlayerMotion.MouseClicked.x - transform.position.x), 2) + Mathf.Pow((PlayerMotion.MouseClicked.y - transform.position.y), 2) < Mathf.Pow(ClickRadius, 2))
+        {
+            ToggleActiveOpinions(true);
+        }
+        else
+        {
+            ToggleActiveOpinions(false);
+        }
+    }
+
+
+    private bool _isActive;
+
+    public void ToggleActiveOpinions(bool active)
+    {
+        for(int i = _opinions.Count - 2; i >= 0; i--)
+        {
+            if(_opinions[i] == null)
+            {
+                _opinions.RemoveAt(i);
+            }
+        }
+
+        if(active && !_isActive)
+        {
+            foreach(Opinion opinion in _opinions)
+            {
+                opinion.ShowOpinion();
+            }
+            _isActive = true;
+        }
+        else if(!active && _isActive)
+        {
+            foreach (Opinion opinion in _opinions)
+            {
+                opinion.HideOpinion();
+            }
+            _isActive = false;
+        }
     }
 
 

@@ -4,6 +4,8 @@ using NMoodyMaskSystem;
 
 public class GameManager : Singleton<GameManager> {
 
+    public PlayerActionSelection playerActionSelection;
+
     public GameObject pauseScreen;
     [SerializeField]
     bool _gameOn = true;

@@ -61,9 +61,12 @@ public class Opinion : MonoBehaviour {
                 Debug.LogWarning("Warning: " + me.Name.Trim().ToLower() + "'s opinion towards " + _otherCharacterName.Trim().ToLower() + " was not found. Hiding opinion.");
 #endif
                 HideOpinion();
+                _opinionNotFound = true;
             }
         }
     }
+
+    bool _opinionNotFound = false;
 
     public void HideOpinion()
     {
@@ -71,6 +74,21 @@ public class Opinion : MonoBehaviour {
         _trait1.gameObject.SetActive(false);
         _trait2.gameObject.SetActive(false);
         _trait3.gameObject.SetActive(false);
+        opinionActive = false;
+    }
+
+    bool opinionActive = false;
+
+    public void ShowOpinion()
+    {
+        if (!_opinionNotFound)
+        {
+            line.gameObject.SetActive(true);
+            _trait1.gameObject.SetActive(true);
+            _trait2.gameObject.SetActive(true);
+            _trait3.gameObject.SetActive(true);
+            opinionActive = true;
+        }
     }
 
 
@@ -116,46 +134,49 @@ public class Opinion : MonoBehaviour {
 
     void DrawOpinion()
     {
-        line.gameObject.SetActive(true);
-        _trait1.gameObject.SetActive(true);
-        _trait2.gameObject.SetActive(true);
-        _trait3.gameObject.SetActive(true);
-        
+        if (opinionActive)
+        {
+            line.gameObject.SetActive(true);
+            _trait1.gameObject.SetActive(true);
+            _trait2.gameObject.SetActive(true);
+            _trait3.gameObject.SetActive(true);
 
-        Vector3[] poss = new Vector3[2];
-        //TODO: make public
-        float opinionOrbDistances = 1;
-        poss[0] = myObject.transform.position;
-        poss[0].z++;
-        poss[1] = emotion.transform.position;
-        poss[1].z++;
-        
-        Vector3 lineVector = emotion.transform.position - myObject.transform.position;
-        
-        float trait2FromStart = lineVector.magnitude / 3;
-        float trait1FromStart = trait2FromStart - opinionOrbDistances;
-        float trait3FromStart = trait2FromStart + opinionOrbDistances;
-        Vector3 unitDirection = lineVector.normalized;
 
-        //TODO: Calculate this instead of just hiding
-        poss[0] += unitDirection * 4f;
+            Vector3[] poss = new Vector3[2];
+            //TODO: make public
+            float opinionOrbDistances = 1;
+            poss[0] = myObject.transform.position;
+            poss[0].z++;
+            poss[1] = emotion.transform.position;
+            poss[1].z++;
 
-        line.SetPositions(poss);
+            Vector3 lineVector = emotion.transform.position - myObject.transform.position;
 
-        _trait1.transform.rotation = Quaternion.Euler(new Vector3(0,0,(-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y))-90));
-        _trait1.transform.position = myObject.transform.position + (unitDirection * trait1FromStart);
-        Color opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _nicNas);
-        opColor.a = 1;
-        _trait1.GetComponent<SpriteRenderer>().color = opColor;
-        _trait2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
-        _trait2.transform.position = myObject.transform.position + (unitDirection * trait2FromStart);
-        opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _chaGre);
-        opColor.a = 1;
-        _trait2.GetComponent<SpriteRenderer>().color = opColor;
-        _trait3.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
-        _trait3.transform.position = myObject.transform.position + (unitDirection * trait3FromStart);
-        opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _honFal);
-        opColor.a = 1;
-        _trait3.GetComponent<SpriteRenderer>().color = opColor;
+            float trait2FromStart = lineVector.magnitude / 3;
+            float trait1FromStart = trait2FromStart - opinionOrbDistances;
+            float trait3FromStart = trait2FromStart + opinionOrbDistances;
+            Vector3 unitDirection = lineVector.normalized;
+
+            //TODO: Calculate this instead of just hiding
+            poss[0] += unitDirection * 4f;
+
+            line.SetPositions(poss);
+
+            _trait1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
+            _trait1.transform.position = myObject.transform.position + (unitDirection * trait1FromStart);
+            Color opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _nicNas);
+            opColor.a = 1;
+            _trait1.GetComponent<SpriteRenderer>().color = opColor;
+            _trait2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
+            _trait2.transform.position = myObject.transform.position + (unitDirection * trait2FromStart);
+            opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _chaGre);
+            opColor.a = 1;
+            _trait2.GetComponent<SpriteRenderer>().color = opColor;
+            _trait3.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
+            _trait3.transform.position = myObject.transform.position + (unitDirection * trait3FromStart);
+            opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _honFal);
+            opColor.a = 1;
+            _trait3.GetComponent<SpriteRenderer>().color = opColor;
+        }
     }
 }

@@ -9,6 +9,8 @@ public class PlayerActionSelection : MonoBehaviour {
     [SerializeField]
     RectTransform ActionsPanel;
     List<Button> buttons = new List<Button>();
+    [SerializeField]
+    GameObject buttonFap;
 
 
     public void ToggleActionSelection(string name, bool active)
@@ -39,22 +41,26 @@ public class PlayerActionSelection : MonoBehaviour {
 
         foreach(string action in actions)
         {
-            GameObject buttonObj = new GameObject();
-            buttonObj.AddComponent<RectTransform>();
-            buttons.Add(buttonObj.AddComponent<Button>());
-            buttonObj.GetComponent<RectTransform>().anchorMax = new Vector2(0,0);
-            buttonObj.GetComponent<RectTransform>().pivot = new Vector2(0, 0);
-            buttonObj.GetComponent<RectTransform>().anchorMin = new Vector2(0,0);
+            GameObject buttonObj = Instantiate(buttonFap);
+            RectTransform buttonRect = buttonObj.GetComponent<RectTransform>();
+            buttons.Add(buttonObj.GetComponent<Button>());
+            
+            buttonRect.anchorMax = new Vector2(0,1);
+            buttonRect.pivot = new Vector2(0, 1);
+            buttonRect.anchorMin = new Vector2(0,1);
             buttonObj.transform.parent = ActionsPanel;
-            buttonObj.transform.position = new Vector3(0, i * 50, 0);
+            buttonRect.anchoredPosition = new Vector2(0, i * 25);
+            
+            buttonRect.localScale = new Vector3(1, 1, 1);
             buttonObj.name = action;
-
-            buttonObj.AddComponent<Text>();
-            buttonObj.GetComponentInChildren<Text>().text = action;
+            
+            Text butText = buttonObj.GetComponentInChildren<Text>();
+            butText.text = action.ToUpper();
             i++;
         }
 
-        ActionsCanvas.sizeDelta = new Vector2(ActionsCanvas.rect.width, i * 50);
-        ActionsCanvas.position = new Vector3(PlayerMotion.MouseClicked.x, PlayerMotion.MouseClicked.y, 0);
+        ActionsCanvas.pivot = new Vector2(0, 1);
+        ActionsCanvas.sizeDelta = new Vector2(ActionsCanvas.rect.width, i * 25);
+        ActionsCanvas.position = new Vector3(PlayerMotion.MouseClicked.x, PlayerMotion.MouseClicked.y, -8);
     }
 }

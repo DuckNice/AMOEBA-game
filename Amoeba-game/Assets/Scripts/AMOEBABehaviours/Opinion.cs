@@ -109,6 +109,7 @@ public class Opinion : MonoBehaviour {
         line.SetColors(Color.black, Color.black);
         line.SetWidth(0.1f, 0.1f);
         line.material = GameManager.Instance.ConnectionMaterial;
+        
 
         _trait1 = Instantiate(GameManager.Instance.Spawnable);
         _trait1.name = "OpTTrait1";
@@ -146,9 +147,9 @@ public class Opinion : MonoBehaviour {
             //TODO: make public
             float opinionOrbDistances = 1;
             poss[0] = myObject.transform.position;
-            poss[0].z++;
+            poss[0].z = -7;
             poss[1] = emotion.transform.position;
-            poss[1].z++;
+            poss[1].z = -7;
 
             Vector3 lineVector = emotion.transform.position - myObject.transform.position;
 
@@ -164,16 +165,19 @@ public class Opinion : MonoBehaviour {
 
             _trait1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
             _trait1.transform.position = myObject.transform.position + (unitDirection * trait1FromStart);
+            _trait1.transform.position = new Vector3(_trait1.transform.position.x, _trait1.transform.position.y, -7);
             Color opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _nicNas);
             opColor.a = 1;
             _trait1.GetComponent<SpriteRenderer>().color = opColor;
             _trait2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
             _trait2.transform.position = myObject.transform.position + (unitDirection * trait2FromStart);
+            _trait2.transform.position = new Vector3(_trait2.transform.position.x, _trait2.transform.position.y, -7);
             opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _chaGre);
             opColor.a = 1;
             _trait2.GetComponent<SpriteRenderer>().color = opColor;
             _trait3.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
             _trait3.transform.position = myObject.transform.position + (unitDirection * trait3FromStart);
+            _trait3.transform.position = new Vector3(_trait3.transform.position.x, _trait3.transform.position.y, -7);
             opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _honFal);
             opColor.a = 1;
             _trait3.GetComponent<SpriteRenderer>().color = opColor;

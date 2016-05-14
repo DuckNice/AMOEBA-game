@@ -5,18 +5,6 @@ using System.Collections.Generic;
 using NMoodyMaskSystem;
 
 
-enum EmotionsAndTraits
-{
-    hapSad,
-    arousDiscus,
-    angryFear,
-    energTired,
-    niceNasty,
-    honFalse,
-    charGreed
-}
-
-
 public class AMOEBAController : TutorialTrigger {
     public Vector3 InitialEntryToPosition = new Vector3(4.2f, -0.5f, 0);
     public float Speed = 5f;
@@ -28,6 +16,8 @@ public class AMOEBAController : TutorialTrigger {
     public Slider niceNasty;
     public Slider honFalse;
     public Slider charGreed;
+    public AMOEBAManager myMan;
+    public AMOEBAManager targetMan;
 
     public TutorialItem traitEmotionHighLight;
 
@@ -80,5 +70,11 @@ public class AMOEBAController : TutorialTrigger {
 
         transform.position = InitialEntryToPosition;
         ActivateTrigger();
+    }
+
+
+    public void CreateOpinion()
+    {
+        myMan.CreateConnection(targetMan);
     }
 }

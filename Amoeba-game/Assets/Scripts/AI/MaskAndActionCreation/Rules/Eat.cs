@@ -3,10 +3,10 @@ using System.Collections;
 
 using NMoodyMaskSystem;
 
-public class Kill : MonoBehaviour {
+public class Eat : MonoBehaviour {
     public static ActionInfo BuildActionInfo()
     {
-        ActionInvoker kill = (text, subject, direct, indPpl, misc) =>
+        ActionInvoker eat = (text, subject, direct, indPpl, misc) =>
         {
             if (subject.Name == "Kasper".ToLower().Trim())
                 text.text = (subject.Name + " EAT " + direct.Name + "!!");
@@ -19,9 +19,9 @@ public class Kill : MonoBehaviour {
             GameManager.MoodyMask.AddPersonToUpdateList("Dead", direct);
             GameManager.MoodyMask.RemovePersonFromUpdateList("Main", direct);
         };
-        GameManager.MoodyMask.AddAction(new MAction("kill", -0.9f, -0.8f, GameManager.MoodyMask, kill, 7f));
+        GameManager.MoodyMask.AddAction(new MAction("eat", -0.9f, -0.8f, GameManager.MoodyMask, eat, 7f));
 
-        RuleConditioner killCondition = (self, other, indPpl) =>
+        RuleConditioner eatCondition = (self, other, indPpl) =>
         {
             if (GameManager.MoodyMask.HistoryBook.Exists(x => x.GetAction() == GameManager.MoodyMask.PosActions["steal"] && (x.GetSubject() == other)) ||
                    GameManager.MoodyMask.HistoryBook.Exists(x => x.GetAction() == GameManager.MoodyMask.PosActions["fight"] && (x.GetSubject() == other)) ||
@@ -39,7 +39,7 @@ public class Kill : MonoBehaviour {
             return false;
         };
 
-        RulePreference killPreference = (self, other) => {
+        RulePreference eatPreference = (self, other) => {
             float ret = Calculator.UnboundAdd(-self.GetOpinionValue(TraitTypes.NiceNasty, other), -self.CalculateTraitType(TraitTypes.NiceNasty));
             ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.angryFear], ret);
             ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.arousDisgus], ret);
@@ -47,6 +47,6 @@ public class Kill : MonoBehaviour {
             return ret;
         };
 
-        return new ActionInfo(kill, killCondition, killPreference);
+        return new ActionInfo(eat, eatCondition, eatPreference);
     }
 }

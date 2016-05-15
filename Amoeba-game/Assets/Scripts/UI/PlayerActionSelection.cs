@@ -11,19 +11,22 @@ public class PlayerActionSelection : MonoBehaviour {
     List<Button> buttons = new List<Button>();
     [SerializeField]
     GameObject buttonFap;
+    public static bool IsActive { get; protected set; }
 
 
     public void ToggleActionSelection(string name, bool active)
     {
         ActionsPanel.gameObject.SetActive(active);
+        IsActive = active;
 
-        if(active)
+        if (active)
             CreateActionButtons(name);
     }
 
     public void Awake()
     {
         ActionsPanel.gameObject.SetActive(false);
+        IsActive = false;
     }
 
 

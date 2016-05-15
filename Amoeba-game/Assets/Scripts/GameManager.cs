@@ -149,4 +149,18 @@ public class GameManager : Singleton<GameManager> {
             Time += UnityEngine.Time.deltaTime;
         }
     }
+
+    public void TogglePauseScreen()
+    {
+        if(pauseScreen.activeSelf)
+        {
+            pauseScreen.SetActive(false);
+            GameOn = true;
+        }
+        else
+        {
+            pauseScreen.SetActive(true);
+            GameOn = false;
+        }
+    }
 }

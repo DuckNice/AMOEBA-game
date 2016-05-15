@@ -6,11 +6,11 @@ namespace NMoodyMaskSetup
     {
         public static void CreateMask(MoodyMaskSystem moodyMask)
         {
-            moodyMask.CreateNewMask("ForestPeople", new float[] { 0,0,0}, TypeMask.culture, new string[] { "Forester", "Witch", "Son", "Daughter"});
+            moodyMask.CreateNewMask("ForestPeople", new float[] { 0,0,0}, TypeMask.culture, new string[] { "Forester", "Commoner", "WiseOne", "Child"});
 
-            ActionInfo KillInfo = Kill.BuildActionInfo();
+            ActionInfo EatInfo = Eat.BuildActionInfo();
 
-            moodyMask.CreateNewRule("Kill", "Kill", KillInfo.RConditioner, KillInfo.RPreference);
+            moodyMask.CreateNewRule("Eat", "Eat", EatInfo.RConditioner, EatInfo.RPreference);
 
             //  ActionInfo GreetInfo = Greet.BuildActionInfo();
 

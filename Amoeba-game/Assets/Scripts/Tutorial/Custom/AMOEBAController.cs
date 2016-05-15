@@ -19,9 +19,11 @@ public class AMOEBAController : TutorialTrigger {
     public AMOEBAManager myMan;
     public AMOEBAManager targetMan;
     public TutorialTrigger OpinionSelectedTrigger;
+    public TutorialTrigger ActionSelectionActivatedTrigger;
+    public TutorialTrigger ActionSelectedTrigger;
     Opinion OpinionToSupervise;
-
     public TutorialItem traitEmotionHighLight;
+
 
     public void Start()
     {
@@ -82,6 +84,7 @@ public class AMOEBAController : TutorialTrigger {
         StartCoroutine(WaitForOpinionSelected());
     }
 
+
     IEnumerator WaitForOpinionSelected()
     {
         WaitForEndOfFrame frameWaiter = new WaitForEndOfFrame();
@@ -92,6 +95,53 @@ public class AMOEBAController : TutorialTrigger {
             {
                 OpinionSelectedTrigger.ActivateTrigger();
                 OpinionToSupervise.KeepOn = true;
+                yield break;
+            }
+
+            yield return frameWaiter;
+        }
+    }
+
+
+    public void StartWaitForActionSelection()
+    {
+        //TODO: Restrict selection to what action can be selected.
+
+        StartCoroutine(WaitForActionSelection());
+    }
+
+    IEnumerator WaitForActionSelection()
+    {
+        WaitForEndOfFrame frameWaiter = new WaitForEndOfFrame();
+
+        while (true)
+        {
+            if (PlayerActionSelection.IsActive)
+            {
+                ActionSelectionActivatedTrigger.ActivateTrigger();
+                yield break;
+            }
+            
+            yield return frameWaiter;
+        }
+    }
+
+    public void StartWaitForActionSelected()
+    {
+        //TODO: Restrict selection to what action can be selected.
+
+        StartCoroutine(WaitForActionSelection());
+    }
+
+    IEnumerator WaitForActionSelected()
+    {
+        WaitForEndOfFrame frameWaiter = new WaitForEndOfFrame();
+
+        while (true)
+        {
+            if (GameManager.MoodyMask.HistoryBook.Count > 0)
+            {
+                ActionSelectedTrigger.ActivateTrigger();
                 yield break;
             }
 

@@ -7,10 +7,9 @@ public class EventLibrary : MonoBehaviour {
 
    // eat
    // hit
-   // retaliate
    // warn
    // wait
-   // play 
+   // play
    // watch out
    // work
    // brew

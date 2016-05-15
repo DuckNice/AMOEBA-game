@@ -151,7 +151,10 @@ public class Being : MonoBehaviour
     public Rule CurrentRule { get; protected set; }
     [HideInInspector]
     public float ActionStartTime { get; protected set; }
-    public UnityEngine.UI.Text text;
+    [SerializeField]
+    private UnityEngine.UI.Text _actionText;
+    public UnityEngine.UI.Text ActionText { get; protected set; }
+
 
 
     public void playerInput(string input)
@@ -178,11 +181,11 @@ public class Being : MonoBehaviour
                         {
                             Person self = GameManager.MoodyMask.GetPerson("Kasper".ToLower().Trim());
 
-                            actionToDo.DoAction(text, self, target, self.GetRule(actionToDo.Name));
+                            actionToDo.DoAction(_actionText, self, target, self.GetRule(actionToDo.Name));
                         }
                         else
                         {
-                            text.text = "Error: didn't recognize '" + sepInput[1] + "'.";
+                            _actionText.text = "Error: didn't recognize '" + sepInput[1] + "'.";
 
                         }
                     }
@@ -190,21 +193,21 @@ public class Being : MonoBehaviour
                     {
                         Person self = GameManager.MoodyMask.GetPerson("Kasper".ToLower().Trim());
 
-                        actionToDo.DoAction(text, self, null, self.GetRule(actionToDo.Name));
+                        actionToDo.DoAction(_actionText, self, null, self.GetRule(actionToDo.Name));
                     }
                     else
                     {
-                        text.text = "Action needs a target person.";
+                        _actionText.text = "Action needs a target person.";
                     }
                 }
                 else
                 {
-                    text.text = "You are dead! You can't do anything!";
+                    _actionText.text = "You are dead! You can't do anything!";
                 }
             }
             else
             {
-                text.text =  sepInput[0] + " not recognized.";
+                _actionText.text =  sepInput[0] + " not recognized.";
             }
         }
     }
@@ -218,7 +221,7 @@ public class Being : MonoBehaviour
 
             if (CurrentRule != null && ActionStartTime + CurrentRule.ActionToTrigger.Duration > time && !forced)
             {
-                CurrentRule.SustainAction(text, self, CurrentRule.SelfOther[self].Person, CurrentRule);
+                CurrentRule.SustainAction(_actionText, self, CurrentRule.SelfOther[self].Person, CurrentRule);
             }
             else
             {
@@ -229,7 +232,7 @@ public class Being : MonoBehaviour
                     CurrentRule = _rule;
                     ActionStartTime = time;
 
-                    _rule.DoAction(text, self, _rule.SelfOther[self].Person, _rule);
+                    _rule.DoAction(_actionText, self, _rule.SelfOther[self].Person, _rule);
                 }
                 else
                 {

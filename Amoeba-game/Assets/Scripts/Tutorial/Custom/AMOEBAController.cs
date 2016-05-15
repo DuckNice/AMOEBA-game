@@ -18,6 +18,8 @@ public class AMOEBAController : TutorialTrigger {
     public Slider charGreed;
     public AMOEBAManager myMan;
     public AMOEBAManager targetMan;
+    public TutorialTrigger OpinionSelectedTrigger;
+    Opinion OpinionToSupervise;
 
     public TutorialItem traitEmotionHighLight;
 
@@ -75,6 +77,25 @@ public class AMOEBAController : TutorialTrigger {
 
     public void CreateOpinion()
     {
-        myMan.CreateConnection(targetMan);
+        OpinionToSupervise = myMan.CreateConnection(targetMan);
+
+        StartCoroutine(WaitForOpinionSelected());
+    }
+
+    IEnumerator WaitForOpinionSelected()
+    {
+        WaitForEndOfFrame frameWaiter = new WaitForEndOfFrame();
+
+        while(true)
+        {
+            if(OpinionToSupervise.OpinionActive)
+            {
+                OpinionSelectedTrigger.ActivateTrigger();
+                OpinionToSupervise.KeepOn = true;
+                yield break;
+            }
+
+            yield return frameWaiter;
+        }
     }
 }

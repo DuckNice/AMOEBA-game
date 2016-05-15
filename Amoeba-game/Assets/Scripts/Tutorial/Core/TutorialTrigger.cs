@@ -6,7 +6,7 @@ public class TutorialTrigger : MonoBehaviour {
     public delegate void Trigger();
     public event Trigger TriggerForActive;
 
-    protected void ActivateTrigger()
+    public void ActivateTrigger()
     {
         if(TriggerForActive != null)
             TriggerForActive();

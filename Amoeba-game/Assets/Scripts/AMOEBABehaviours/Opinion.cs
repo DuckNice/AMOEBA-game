@@ -10,6 +10,7 @@ public class Opinion : MonoBehaviour {
     GameObject _trait1;
     GameObject _trait2;
     GameObject _trait3;
+    public bool KeepOn = false;
 
 
 
@@ -70,14 +71,18 @@ public class Opinion : MonoBehaviour {
 
     public void HideOpinion()
     {
-        line.gameObject.SetActive(false);
-        _trait1.gameObject.SetActive(false);
-        _trait2.gameObject.SetActive(false);
-        _trait3.gameObject.SetActive(false);
-        opinionActive = false;
+        if (!KeepOn)
+        {
+            line.gameObject.SetActive(false);
+            _trait1.gameObject.SetActive(false);
+            _trait2.gameObject.SetActive(false);
+            _trait3.gameObject.SetActive(false);
+            _opinionActive = false;
+        }
     }
 
-    bool opinionActive = false;
+    bool _opinionActive = false;
+    public bool OpinionActive { get { return _opinionActive; } }
 
     public void ShowOpinion()
     {
@@ -87,7 +92,7 @@ public class Opinion : MonoBehaviour {
             _trait1.gameObject.SetActive(true);
             _trait2.gameObject.SetActive(true);
             _trait3.gameObject.SetActive(true);
-            opinionActive = true;
+            _opinionActive = true;
         }
     }
 
@@ -114,18 +119,21 @@ public class Opinion : MonoBehaviour {
         _trait1 = Instantiate(GameManager.Instance.Spawnable);
         _trait1.name = "OpTTrait1";
         _trait1.transform.parent = transform;
+        _trait1.transform.localScale = new Vector3(GameManager.OpinionScale, GameManager.OpinionScale, GameManager.OpinionScale);
         SpriteRenderer rend = _trait1.GetComponent<SpriteRenderer>();
         rend.sprite = GameManager.OpinionRepresentation;
 
         _trait2 = Instantiate(GameManager.Instance.Spawnable);
         _trait2.name = "OpTTrait2";
         _trait2.transform.parent = transform;
+        _trait2.transform.localScale = new Vector3(GameManager.OpinionScale, GameManager.OpinionScale, GameManager.OpinionScale);
         rend = _trait2.GetComponent<SpriteRenderer>();
         rend.sprite = GameManager.OpinionRepresentation;
 
         _trait3 = Instantiate(GameManager.Instance.Spawnable);
         _trait3.name = "OpToTrait3";
         _trait3.transform.parent = transform;
+        _trait3.transform.localScale = new Vector3(GameManager.OpinionScale, GameManager.OpinionScale, GameManager.OpinionScale);
         rend = _trait3.GetComponent<SpriteRenderer>();
         rend.sprite = GameManager.OpinionRepresentation;
 
@@ -135,7 +143,7 @@ public class Opinion : MonoBehaviour {
 
     void DrawOpinion()
     {
-        if (opinionActive)
+        if (_opinionActive)
         {
             line.gameObject.SetActive(true);
             _trait1.gameObject.SetActive(true);
@@ -145,7 +153,7 @@ public class Opinion : MonoBehaviour {
 
             Vector3[] poss = new Vector3[2];
             //TODO: make public
-            float opinionOrbDistances = 1;
+            float opinionOrbDistances = 2;
             poss[0] = myObject.transform.position;
             poss[0].z = -7;
             poss[1] = emotion.transform.position;
@@ -165,19 +173,19 @@ public class Opinion : MonoBehaviour {
 
             _trait1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
             _trait1.transform.position = myObject.transform.position + (unitDirection * trait1FromStart);
-            _trait1.transform.position = new Vector3(_trait1.transform.position.x, _trait1.transform.position.y, -7);
+            _trait1.transform.position = new Vector3(_trait1.transform.position.x, _trait1.transform.position.y, -8);
             Color opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _nicNas);
             opColor.a = 1;
             _trait1.GetComponent<SpriteRenderer>().color = opColor;
             _trait2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
             _trait2.transform.position = myObject.transform.position + (unitDirection * trait2FromStart);
-            _trait2.transform.position = new Vector3(_trait2.transform.position.x, _trait2.transform.position.y, -7);
+            _trait2.transform.position = new Vector3(_trait2.transform.position.x, _trait2.transform.position.y, -8);
             opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _chaGre);
             opColor.a = 1;
             _trait2.GetComponent<SpriteRenderer>().color = opColor;
             _trait3.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (-Mathf.Rad2Deg * Mathf.Atan2(unitDirection.x, unitDirection.y)) - 90));
             _trait3.transform.position = myObject.transform.position + (unitDirection * trait3FromStart);
-            _trait3.transform.position = new Vector3(_trait3.transform.position.x, _trait3.transform.position.y, -7);
+            _trait3.transform.position = new Vector3(_trait3.transform.position.x, _trait3.transform.position.y, -8);
             opColor = Color.Lerp(GameManager.LikeTrait, GameManager.DislikeTrait, _honFal);
             opColor.a = 1;
             _trait3.GetComponent<SpriteRenderer>().color = opColor;

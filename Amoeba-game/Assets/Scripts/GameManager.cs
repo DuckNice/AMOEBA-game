@@ -122,6 +122,10 @@ public class GameManager : Singleton<GameManager> {
     private Color _likeTrait;
     public static Color LikeTrait { get { return Instance._likeTrait; } }
 
+    [SerializeField]
+    private float _opinionScale;
+    public static float OpinionScale { get { return Instance._opinionScale; } }
+
     #endregion
 
 

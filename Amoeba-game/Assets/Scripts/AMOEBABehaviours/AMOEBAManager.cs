@@ -15,6 +15,8 @@ public class AMOEBAManager : MonoBehaviour {
     protected float _consideranceRadius = 800;
     [SerializeField]
     float ClickRadius = 2f;
+    [SerializeField]
+    bool _ignoreRange;
 
     protected static List<AMOEBAManager> _instances = new List<AMOEBAManager>();
     protected List<AMOEBAManager> _notableInstances = new List<AMOEBAManager>();
@@ -63,18 +65,22 @@ public class AMOEBAManager : MonoBehaviour {
     }
 
 
-    public void CreateConnection(AMOEBAManager other)
+    public Opinion CreateConnection(AMOEBAManager other)
     {
         //TODO: Make connection only appear if there is an opinion. LONGER FIX: make an opinion appear which is blank.
         //   if ()
         //   {
         if (other.CharacterName != null && other.Traits != null)
         {
-
-            _opinions.Add(Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject));
-
+            Opinion opp = Opinion.CreateComponent(gameObject, CharacterName, other.CharacterName, other.Traits.gameObject);
+            _opinions.Add(opp);
+            opp.HideOpinion();
             _connectedInstances.Add(other);
+
+            return opp;
         }
+
+        return null;
      //   }
     }
     
@@ -185,7 +191,7 @@ public class AMOEBAManager : MonoBehaviour {
 
     public void ToggleIsSelected()
     {
-        if(Mathf.Pow((PlayerMotion.MouseClicked.x - transform.position.x), 2) + Mathf.Pow((PlayerMotion.MouseClicked.y - transform.position.y), 2) < Mathf.Pow(ClickRadius, 2))
+        if(_ignoreRange || (Mathf.Pow((PlayerMotion.MouseClicked.x - transform.position.x), 2) + Mathf.Pow((PlayerMotion.MouseClicked.y - transform.position.y), 2) < Mathf.Pow(ClickRadius, 2)))
         {
             ToggleActiveOpinions(true);
         }

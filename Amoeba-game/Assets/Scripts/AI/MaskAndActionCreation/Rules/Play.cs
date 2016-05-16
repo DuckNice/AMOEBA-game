@@ -14,6 +14,7 @@ public class Play
             subject.Moods[MoodTypes.arousDisgus] += Calculator.AddTowards0(0.1f, subject.Moods[MoodTypes.arousDisgus]);
             subject.Moods[MoodTypes.hapSad] += Calculator.UnboundAdd(0.1f, subject.Moods[MoodTypes.hapSad]);
             subject.Moods[MoodTypes.energTired] += Calculator.UnboundAdd(-0.1f, subject.Moods[MoodTypes.energTired]);
+            // subject.Moods[MoodTypes.angryFear] += Calculator.UnboundAdd(0.1f, subject.Moods[MoodTypes.angryFear]);
         };
         //Rain should be rule-specific, not action specific.
         GameManager.MoodyMask.AddAction(new MAction("play", GameManager.MoodyMask, play, 5f));

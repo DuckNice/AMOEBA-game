@@ -1,15 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using NMoodyMaskSystem;
 
-public class Child : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+namespace NMoodyMaskSetup
+{
+    public class Child
+    {
+        public static void CreateMask(MoodyMaskSystem moodyMask)
+        {
+        }
+    }
 }

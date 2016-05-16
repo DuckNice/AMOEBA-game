@@ -101,6 +101,8 @@ public class NPCCreator
 
 	public static IEnumerator SetupInterPerson(MoodyMaskSystem MoodyMask, Being.InterPersonInfo info)
 	{
+        float timeWaited = 0;
+
 		while (true) 
 		{
             Person target = MoodyMask.GetPerson(info.TargetName);
@@ -118,9 +120,12 @@ public class NPCCreator
                 yield break;
 			}
 
-            Debug.LogWarning("Setting up inter-person '" + info.PersonName + "' towards '" + ((string.IsNullOrEmpty(info.TargetName) ) ? "<<No Name>>" : info.TargetName) + "' has no target. Waiting.");
-
+            if (timeWaited > 3f)
+            {
+                Debug.LogWarning("Setting up inter-person '" + info.PersonName + "' towards '" + ((string.IsNullOrEmpty(info.TargetName.Trim())) ? "<<No Name>>" : info.TargetName.Trim().ToLower()) + "' has no target. Waiting.");
+            }
 			yield return new WaitForSeconds(0.5f);
+            timeWaited += 0.5f;
 		}
 	}
 

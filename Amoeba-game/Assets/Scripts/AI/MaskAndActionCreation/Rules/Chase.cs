@@ -3,7 +3,7 @@ using System.Collections;
 
 using NMoodyMaskSystem;
 
-public class Play
+public class Chase
 {
     public static ActionInfo BuildActionInfo()
     {

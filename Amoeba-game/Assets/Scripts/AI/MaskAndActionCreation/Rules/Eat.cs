@@ -3,7 +3,7 @@ using System.Collections;
 
 using NMoodyMaskSystem;
 
-public class Eat : MonoBehaviour {
+public class Eat {
     public static ActionInfo BuildActionInfo()
     {
         ActionInvoker eat = (text, subject, direct, indPpl, misc) =>

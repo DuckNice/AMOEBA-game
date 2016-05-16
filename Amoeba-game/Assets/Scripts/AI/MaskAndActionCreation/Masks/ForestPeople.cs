@@ -10,7 +10,7 @@ namespace NMoodyMaskSetup
 
             ActionInfo EatInfo = Eat.BuildActionInfo();
 
-            moodyMask.CreateNewRule("Eat", "Eat", EatInfo.RConditioner, EatInfo.RPreference);
+            moodyMask.CreateNewRule("Eat", "Eat", -0.4f, -0.9f, EatInfo.RConditioner, EatInfo.RPreference);
 
             //  ActionInfo GreetInfo = Greet.BuildActionInfo();
 

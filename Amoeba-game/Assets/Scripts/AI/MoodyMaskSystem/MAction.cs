@@ -2,9 +2,7 @@
 {
     public class MAction
     {
-        public static MAction Empty = new MAction("Empty", 0.0f, 0.0f);
-        float _selfGain;
-        float _againstGain;
+        public static MAction Empty = new MAction("Empty");
         public string Name = "";
         ActionInvoker _actionInvoker;
         ActionInvoker _sustainActionInvoker;
@@ -16,26 +14,24 @@
 
         /// <summary>
         /// </summary>
-        /// <param name="n">name</param>
-        /// <param name="sG">selfGain</param>
-        /// <param name="agG">againstGain</param>
-        /// <param name="mM">moodyMask</param>
-        /// <param name="aInv">actionInvoker</param>
-        /// <param name="dur">duration</param>
-        /// <param name="susAInv">sustainActionInvoker</param>
-        /// <param name="ndDr">needsDirect</param>
-        /// <param name="ndIndr">needsIndirect</param>
-		public MAction(string n, float sG, float agG, MoodyMaskSystem mM, ActionInvoker aInv = null, float dur = 2.0f, ActionInvoker susAInv = null, bool ndDr = true, bool ndIndr = false)
+        /// <param name="name">name</param>
+        /// <param name="selfGain">selfGain</param>
+        /// <param name="againstGain">The gain of the other character</param>
+        /// <param name="moodyMask">moodyMask</param>
+        /// <param name="actionInvoker">The action to be executed when the action fires</param>
+        /// <param name="duration">duration</param>
+        /// <param name="sustainActionInvoker">The action to execute while we wait for the action to end.</param>
+        /// <param name="needsDirect">needs a direct target</param>
+        /// <param name="needsIndirect">needs and indirect target</param>
+		public MAction(string name, MoodyMaskSystem moodyMask, ActionInvoker actionInvoker = null, float duration = 2.0f, ActionInvoker sustainActionInvoker = null, bool needsDirect = true, bool needsIndirect = false)
         {
-            _selfGain = sG;
-            _againstGain = agG;
-            Name = n;
-            MoodyMask = mM;
-            _actionInvoker = aInv;
-            _sustainActionInvoker = susAInv;
-			Duration = dur;
-            NeedsDirect = ndDr;
-            NeedsIndirect = ndIndr;
+            Name = name;
+            MoodyMask = moodyMask;
+            _actionInvoker = actionInvoker;
+            _sustainActionInvoker = sustainActionInvoker;
+			Duration = duration;
+            NeedsDirect = needsDirect;
+            NeedsIndirect = needsIndirect;
         }
 
         /// <summary>
@@ -43,10 +39,8 @@
         /// <param name="n">name</param>
         /// <param name="sG">selfGain</param>
         /// <param name="agG">againstGain</param>
-        public MAction(string n, float sG, float agG)
+        public MAction(string n)
         {
-            _selfGain = sG;
-            _againstGain = agG;
             Name = n;
         }
 
@@ -96,10 +90,5 @@
         {
             return abi; //RIGHT now, just ability
         }
-
-
-		public float GetGain(bool sG){ if(sG){return _selfGain;} return _againstGain; }
-        public void SetGain(float inp, bool sG) { if (sG) { _selfGain = inp; } else { _againstGain = inp; } }
-        public void AddToGain(float inp, bool sG) { if (sG) { _selfGain += inp; } else { _againstGain += inp; } }
     }
 }

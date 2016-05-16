@@ -58,13 +58,13 @@ namespace NMoodyMaskSystem
         /// <param name="rCon">ruleConditioner</param>
         /// <param name="rPrf">rulePreference</param>
         /// <param name="visClc">visibilityCalculator</param>
-        public void CreateNewRule(string rN, MAction posA, RuleInfoCont rInfoCont)
+        public void CreateNewRule(string rN, MAction posA, float selfGain, float againstGain, RuleInfoCont rInfoCont)
         {
             rN = rN.ToLower();
 
             if (!InstRules.Keys.Contains(rN))
             {
-                InstRules.Add(rN, new Rule(rN.ToLower(), posA, rInfoCont));
+                InstRules.Add(rN, new Rule(rN.ToLower(), posA, selfGain, againstGain, rInfoCont));
             }
             else
             {

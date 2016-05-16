@@ -16,10 +16,9 @@ public class Eat {
             subject.Moods[MoodTypes.arousDisgus] += Calculator.UnboundAdd(-0.5f, subject.Moods[MoodTypes.arousDisgus]);
             subject.Moods[MoodTypes.hapSad] += Calculator.UnboundAdd(-0.5f, subject.Moods[MoodTypes.hapSad]);
             subject.Moods[MoodTypes.energTired] += Calculator.UnboundAdd(-0.5f, subject.Moods[MoodTypes.hapSad]);
-            GameManager.MoodyMask.AddPersonToUpdateList("Dead", direct);
-            GameManager.MoodyMask.RemovePersonFromUpdateList("Main", direct);
+            AMOEBAManager.KillCharacter(direct.Name);
         };
-        GameManager.MoodyMask.AddAction(new MAction("eat", -0.9f, -0.8f, GameManager.MoodyMask, eat, 7f));
+        GameManager.MoodyMask.AddAction(new MAction("eat", GameManager.MoodyMask, eat, 7f));
 
         RuleConditioner eatCondition = (self, other, indPpl) =>
         {

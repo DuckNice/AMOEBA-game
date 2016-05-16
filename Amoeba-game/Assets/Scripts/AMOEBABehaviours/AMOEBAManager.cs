@@ -33,9 +33,32 @@ public class AMOEBAManager : MonoBehaviour {
     public Traits Traits{ get; private set; }
     Animator _emotionAnim;
 
+
     void Awake()
     {
         _instances.Add(this);
+    }
+
+
+    public static void KillCharacter(string name)
+    {
+        int index = _instances.FindIndex(x => x.CharacterName.Trim().ToLower() == name.Trim().ToLower());
+
+        if(index > -1)
+        {
+            _instances[index].Kill();
+        }
+        else
+        {
+            Debug.LogWarning("Warning: Character with name '" + name + "' not killing character.");
+        }
+    }
+
+
+    public void Kill()
+    {
+        GameManager.MoodyMask.AddPersonToUpdateList("Dead", GameManager.MoodyMask.GetPerson(CharacterName));
+        GameManager.MoodyMask.RemovePersonFromUpdateList("Main", GameManager.MoodyMask.GetPerson(CharacterName));
     }
 
 

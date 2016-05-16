@@ -11,6 +11,7 @@ namespace NMoodyMaskSystem
         culture
     }
 
+    //good = 1, bad = -1. e.g. hap = 1, sad = -1.
 	public enum MoodTypes
 	{
 		hapSad,
@@ -41,6 +42,7 @@ namespace NMoodyMaskSystem
         }
     }
 
+    //good = 1, bad = -1. e.g. nice = 1, nasty = -1.
     public enum TraitTypes
     {
         NiceNasty,

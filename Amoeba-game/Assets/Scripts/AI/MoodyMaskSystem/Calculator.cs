@@ -6,130 +6,96 @@ namespace NMoodyMaskSystem
 {
     public class Calculator
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="imp">impulsivity</param>
-        /// <param name="abi">ability</param>
-        /// <param name="curR">currentRule</param>
-        /// <param name="rToTrig">rulesThatWillTrigger</param>
-        /// <returns></returns>
-        public static float CalculateEgo(float imp, float abi, Rule curR, List<Rule> rToTrig)
+        public static float CalculateEgo(float implusivity, float ability, Rule rule, List<Rule> rulesToTrigger)
         {
             float tempEgo = 1.0f;
 
-            if (rToTrig != null)
+            if (rulesToTrigger != null)
             {
-                foreach (Rule rule in rToTrig)
+                foreach (Rule curRule in rulesToTrigger)
                 {
-                    float visibility = rule.RuleInfoCont.VisCalc();
+                    float visibility = curRule.RuleInfoCont.VisCalc();
 
-					tempEgo += rule.GetRuleStrength() * rule.ActionToTrigger.EstimationOfSuccess(abi) * visibility * CalculateGain(rule, false);
+					tempEgo += curRule.GetRuleStrength() * curRule.ActionToTrigger.EstimationOfSuccess(ability) * visibility * CalculateGain(curRule, false);
 
                     //probability is just r.strength for now. let's leave it like that for simplicity
 					//right now it just check visibility for all people in world, not just the people involved in the action considered.
                 }
             }
 
-            tempEgo *= (1 - imp);
+            tempEgo *= (1 - implusivity);
 
-            float ego = imp * CalculateGain(curR, true) + tempEgo;
-
-         //   debug.Write("Ego: " + ego);
+            float ego = implusivity * CalculateGain(rule, true) + tempEgo;
 
             return ego;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="r">rule</param>
-        /// <param name="rs">rules</param>
-        /// <param name="mInf">maskInfluence</param>
-        /// <returns></returns>
-        public static float CalculateSuperEgo(Rule r, List<Rule> rs, float mInf)
+        
+        public static float CalculateSuperEgo(Rule rule, List<Rule> rules, float maskInfluence)
         {
             float superEgo = 0.0f;
 
                 //own rules morality:
-            superEgo += r.GetRuleStrength() * mInf;
+            superEgo += rule.GetRuleStrength() * maskInfluence;
 
                 //consequent rules morality:
-            if (rs != null)
+            if (rules != null)
             {
-                foreach (Rule rule in rs)
+                foreach (Rule curRule in rules)
                 {
-                    superEgo += rule.GetRuleStrength() * mInf;
+                    superEgo += curRule.GetRuleStrength() * maskInfluence;
                 }
             }
-
-			//debug.Write("SuperEgo: " + superEgo);
 
             return superEgo;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="rat">rationality</param>
-        /// <param name="mor">morality</param>
-        /// <param name="imp">impulsivity</param>
-        /// <param name="abi">ability</param>
-        /// <param name="r">rule</param>
-        /// <param name="rToTrig">rulesThatWillTrigger</param>
-        /// <param name="mInf">maskInfluence</param>
-        /// <returns></returns>
-        public static float CalculateRule(Overlay absTraits, Rule r, List<Rule> rToTrig, float mInf)
+        
+        public static float CalculateRule(Overlay absTraits, Rule rule, List<Rule> rulesToTrigger, float maskInfluence)
         {
-			return (CalculateEgo(absTraits._imp, absTraits._abi, r, rToTrig) * absTraits._rat) + (CalculateSuperEgo(r, rToTrig, mInf) * absTraits._mor);
+			return (CalculateEgo(absTraits._imp, absTraits._abi, rule, rulesToTrigger) * absTraits._rat) + (CalculateSuperEgo(rule, rulesToTrigger, maskInfluence) * absTraits._mor);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="r">rule</param>
-        /// <param name="sG">selfGain</param>
-        /// <returns></returns>
-        public static float CalculateGain(Rule r, bool sG)
+        
+        public static float CalculateGain(Rule rule, bool selfGain)
         {
-            return r.ActionToTrigger.GetGain(sG);
+            return rule.GetGain(selfGain);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="wF">weightingFactor</param>
-        /// <returns></returns>
-        public static float Blend(float x, float y, float wF)
+        
+        public static float Blend(float x, float y, float weightingFactor)
         {
-            float uWeightingFactor = 1 - ((1 - wF) / 2);
+            float uWeightingFactor = 1 - ((1 - weightingFactor) / 2);
             float blend = y * uWeightingFactor + x * (1 - uWeightingFactor);
 
             return blend;
         }
+        
 
-        /// <summary>
-        /// </summary>
-        /// <param name="uBndNum">unboundedNumber</param>
-        /// <param name="curVl">currentValue</param>
-        /// <returns></returns>
-        public static float UnboundAdd(float uBndNum, float curVl)
+        public static float UnboundAdd(float unboundNumber, float currentValue)
         {
-            float dist;
-            if (uBndNum > 0)
-            {
-                dist = Math.Abs((1) - curVl);
-            }
-            else
-            {
-                dist = Math.Abs((-1) - curVl);
-            }
-            return uBndNum * dist;
+            float temp = Math.Max(unboundNumber, -1);
+            temp = Math.Min(temp, 1);
+
+            float dist= Math.Abs(((unboundNumber > 0) ? 1: -1) - currentValue);
+
+            return unboundNumber * dist;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="inp">inpact</param>
-        /// <returns></returns>
-		public static float NegPosTransform(float inp){
-			return inp-(1-inp);
+
+        public static float AddTowards0(float unboundNumber, float currentValue)
+        {
+            float temp = Math.Max(unboundNumber, 0);
+            temp = Math.Min(temp, 1);
+
+            float dist = Math.Abs((0) - currentValue);
+            
+            return ((currentValue > 0) ? -1: 1) * temp * dist;
+        }
+
+        
+		public static float NegPosTransform(float impact){
+			return impact-(1-impact);
 		}
     }
 }

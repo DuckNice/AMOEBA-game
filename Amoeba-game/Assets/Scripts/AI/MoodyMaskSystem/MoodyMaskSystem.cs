@@ -117,13 +117,13 @@ namespace NMoodyMaskSystem
 		}
 
 
-        public void CreateNewRule(string ruleName, string actName, RuleConditioner ruleCondition = null, RulePreference rulePreference = null, VisibilityCalculator visCalc = null)
+        public void CreateNewRule(string ruleName, string actName, float selfGain, float againstGain, RuleConditioner ruleCondition = null, RulePreference rulePreference = null, VisibilityCalculator visCalc = null)
         {
            ruleName = ruleName.ToLower().Trim();
            actName = actName.ToLower().Trim();
            
            if(PplAndMasks.FindRule(ruleName) == null){
-               PplAndMasks.CreateNewRule(ruleName, PosActions[actName.ToLower().Trim()], new RuleInfoCont(ruleCondition, rulePreference, visCalc));
+               PplAndMasks.CreateNewRule(ruleName, PosActions[actName.ToLower().Trim()], selfGain, againstGain, new RuleInfoCont(ruleCondition, rulePreference, visCalc));
            }
            else
            {

@@ -85,8 +85,8 @@ public class NPCCreator
 
                     actionInfo = (ActionInfo)actionFetcherType.GetMethod("BuildActionInfo").Invoke(null, null);
 
-
-                    MoodyMask.CreateNewRule(RuleName, RuleName, actionInfo.RConditioner, actionInfo.RPreference);
+                    //Add gains to personal rule creation.
+                    MoodyMask.CreateNewRule(RuleName, RuleName, 0.0f, 0.0f, actionInfo.RConditioner, actionInfo.RPreference);
 
                     //TODO: Get List of rules to trigger from somewhere
                     List<Rule> chatRulesToTrigger = new List<Rule>();
@@ -116,7 +116,6 @@ public class NPCCreator
 #if ALL_DEBUG_MODE || NPCCREATOR_DEBUG_MODE
                 Debug.Log("Setup person '" + info.PersonName + ", " + info.TargetName + " executed.");
 #endif
-
                 yield break;
 			}
 

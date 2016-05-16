@@ -9,8 +9,9 @@ namespace NMoodyMaskSystem
 {
     public class Rule
     {
-        public static Rule Empty = new Rule("Empty", MAction.Empty, RuleInfoCont.Empty);
-
+        public static Rule Empty = new Rule("Empty", MAction.Empty, 0,0, RuleInfoCont.Empty);
+        float _selfGain;
+        float _againstGain;
         public string RuleName;
         //	public Dictionary<string, MAction> actionsByRoles; 
         public MAction ActionToTrigger;
@@ -31,9 +32,11 @@ namespace NMoodyMaskSystem
         }
         
 
-        public Rule(string ruleName, MAction act, RuleInfoCont ruleInfoCont)
+        public Rule(string ruleName, MAction act, float selfGain, float againstGain, RuleInfoCont ruleInfoCont)
         {
             RuleName = ruleName;
+            _selfGain = selfGain;
+            _againstGain = againstGain;
             ActionToTrigger = act;
             RuleInfoCont = ruleInfoCont;
 
@@ -123,5 +126,10 @@ namespace NMoodyMaskSystem
         public float GetRuleStrength() { return _strength; }
 		public void SetRuleStrength(float inp){ _strength = inp;  }
 		public void AddToRuleStrength(float inp){ _strength += Calculator.UnboundAdd(inp,_strength);  }
+
+
+        public float GetGain(bool sG) { if (sG) { return _selfGain; } return _againstGain; }
+        public void SetGain(float inp, bool sG) { if (sG) { _selfGain = inp; } else { _againstGain = inp; } }
+        public void AddToGain(float inp, bool sG) { if (sG) { _selfGain += inp; } else { _againstGain += inp; } }
     }
 }

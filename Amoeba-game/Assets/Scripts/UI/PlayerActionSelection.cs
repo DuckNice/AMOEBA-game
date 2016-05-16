@@ -16,17 +16,24 @@ public class PlayerActionSelection : MonoBehaviour {
 
     public void ToggleActionSelection(string name, bool active)
     {
-        ActionsPanel.gameObject.SetActive(active);
-        IsActive = active;
+        if (ActionsPanel != null)
+        {
+            ActionsPanel.gameObject.SetActive(active);
+            IsActive = active;
 
-        if (active)
-            CreateActionButtons(name);
+            if (active)
+                CreateActionButtons(name);
+        }
     }
+    
 
     public void Awake()
     {
-        ActionsPanel.gameObject.SetActive(false);
-        IsActive = false;
+        if (ActionsPanel != null)
+        { 
+            ActionsPanel.gameObject.SetActive(false);
+            IsActive = false;
+        }
     }
 
 

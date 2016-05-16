@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -115,8 +115,8 @@ namespace NMoodyMaskSystem
         }
 
 
-        public void DoAction(UnityEngine.UI.Text text, Person subject, Person dirObject, Rule rule, Person[] indPpl = null, object[] misc = null){
-			ActionToTrigger.DoAction (text, subject, dirObject,rule, indPpl, misc);
+        public void DoAction(UnityEngine.UI.Text text, Person subject, Person dirObject, Person[] indPpl = null, object[] misc = null){
+			ActionToTrigger.DoAction (text, subject, dirObject, this, indPpl, misc);
 		}
 
         public void SustainAction(UnityEngine.UI.Text text, Person subject, Person dirObject, Rule rule, Person[] indPpl = null, object[] misc = null){

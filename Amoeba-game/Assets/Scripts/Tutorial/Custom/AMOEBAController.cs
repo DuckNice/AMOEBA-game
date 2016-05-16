@@ -25,6 +25,12 @@ public class AMOEBAController : TutorialTrigger {
     public TutorialItem traitEmotionHighLight;
 
 
+    public void Awake()
+    {
+        Play.BuildActionInfo();
+    }
+
+
     public void Start()
     {
         //

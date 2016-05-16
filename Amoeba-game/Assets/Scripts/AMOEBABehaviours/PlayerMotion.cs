@@ -6,10 +6,10 @@ public class PlayerMotion : MonoBehaviour {
     public float _speed = 5;
     public static bool CanMove = true;
 
-    private Vector3 _currentTargetPosition;
+  //  private Vector3 _currentTargetPosition;
 
 
-    void Update()
+    void LateUpdate()
     {
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {

@@ -232,7 +232,7 @@ public class Being : MonoBehaviour
                     CurrentRule = _rule;
                     ActionStartTime = time;
 
-                    _rule.DoAction(_actionText, self, _rule.SelfOther[self].Person, _rule);
+                    _rule.DoAction(_actionText, self, _rule.SelfOther[self].Person);
                 }
                 else
                 {

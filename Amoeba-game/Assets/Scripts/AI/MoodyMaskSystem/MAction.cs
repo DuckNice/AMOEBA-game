@@ -1,4 +1,4 @@
-﻿namespace NMoodyMaskSystem
+namespace NMoodyMaskSystem
 {
     public class MAction
     {

@@ -5,6 +5,13 @@ using NMoodyMaskSystem;
 public class GameManager : Singleton<GameManager> {
 
     public PlayerActionSelection playerActionSelection;
+    public bool selectingFromActionPanel = false;
+
+    public void ToggleSelectingFromActionPanel(bool selecting)
+    {
+        selectingFromActionPanel = selecting;
+    }
+
 
     public GameObject pauseScreen;
     [SerializeField]
@@ -139,6 +146,12 @@ public class GameManager : Singleton<GameManager> {
                 _AIManager = gameObject.AddComponent<AIManager>();
             }
         }
+    }
+
+
+    public void ChangeScene(string sceneName)
+    {
+        Application.LoadLevel(sceneName);
     }
 
 

@@ -19,7 +19,7 @@ public class PlayerActionSelection : MonoBehaviour {
 
     public void ToggleActionSelection(string characterName, bool active)
     {
-        if (ActionsPanel != null && !GameManager.Instance.selectingFromActionPanel)
+        if (ActionsPanel != null)
         {
             ActionsPanel.gameObject.SetActive(active);
             IsActive = active;
@@ -37,6 +37,18 @@ public class PlayerActionSelection : MonoBehaviour {
             ActionsPanel.gameObject.SetActive(false);
             IsActive = false;
         }
+    }
+    
+
+    public bool IsWithinActionCanvas(Vector2 point)
+    {
+        Vector2 size = Vector2.Scale(ActionsCanvas.rect.size, ActionsCanvas.lossyScale);
+        Vector2 position = Camera.main.WorldToScreenPoint(ActionsCanvas.position);
+        Rect rect = new Rect(ActionsCanvas.position.x, ActionsCanvas.position.y - size.y, size.x, size.y);
+
+        Vector2 screenPos = Camera.main.ScreenToWorldPoint(point);
+
+        return rect.Contains(screenPos);
     }
 
 
@@ -71,35 +83,16 @@ public class PlayerActionSelection : MonoBehaviour {
             butText.text = action.ToUpper();
 
             buttonObj.GetComponent<Button>().onClick.AddListener(
-                    () =>
+                () =>
                     {
-                        GameManager.Instance.ToggleSelectingFromActionPanel(false);
                         ToggleActionSelection("", false);
-                        Debug.Log("Clicked");
-                        GameManager.MoodyMask.GetRule(action).DoAction(
+                        GameManager.MoodyMask.PosActions[action].DoAction(
                         playerText,
                         GameManager.MoodyMask.GetPerson("Kasper"),
                         GameManager.MoodyMask.GetPerson(characterName));
                     }
-                );
-
-            EventTrigger.Entry entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerDown;
-            entry.callback = new EventTrigger.TriggerEvent();
-            UnityEngine.Events.UnityAction<BaseEventData> call = new UnityEngine.Events.UnityAction<BaseEventData>(
-                    (x) =>
-                    {
-                        Debug.Log("Clicked");
-                        GameManager.MoodyMask.GetRule(action).DoAction(
-                        playerText,
-                        GameManager.MoodyMask.GetPerson("Kasper"),
-                        GameManager.MoodyMask.GetPerson(characterName));
-                    }
-                );
-
-            EventTrigger trigger = buttonObj.AddComponent<EventTrigger>();
-            trigger.triggers.Add(entry);
-
+            );
+            
             i++;
         }
 

@@ -61,6 +61,7 @@ public class NPCCreator
 		}
 
 		MoodyMask.CreateNewMask(personName, new float[] { 0.0f, 0.0f, 0.0f }, TypeMask.selfPerc, new string[] { "self" });
+        //Add functionality for self-perception.
 		MaskAdds selfPersMask = new MaskAdds("self", personName, 0.0f);
 		
 		MoodyMask.CreateNewPerson(selfPersMask, culture, new List<MaskAdds>(), rationality, morality, impulsivity, traits, moods);

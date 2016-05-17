@@ -142,7 +142,6 @@ namespace NMoodyMaskSystem
             {
                 System.Console.WriteLine("Warning: Action with name: '" + action.Name + "' already exists. Please note that action names are not case sensitive.");
             }
-            
         }
 
 

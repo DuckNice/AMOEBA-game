@@ -14,7 +14,8 @@ public class PlayerMotion : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             MouseClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameManager.Instance.playerActionSelection.ToggleActionSelection("", false);
+            if(!GameManager.Instance.playerActionSelection.IsWithinActionCanvas(Input.mousePosition))
+                GameManager.Instance.playerActionSelection.ToggleActionSelection("", false);
             /*
             _currentTargetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _currentTargetPosition = new Vector3(_currentTargetPosition.x, _currentTargetPosition.y, 0);

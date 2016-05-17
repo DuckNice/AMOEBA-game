@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 
 public class PlayerActionSelection : MonoBehaviour {
     [SerializeField]
@@ -89,7 +88,7 @@ public class PlayerActionSelection : MonoBehaviour {
                         GameManager.MoodyMask.PosActions[action].DoAction(
                         playerText,
                         GameManager.MoodyMask.GetPerson("Kasper"),
-                        GameManager.MoodyMask.GetPerson(characterName));
+                        GameManager.MoodyMask.GetPerson(characterName), new NMoodyMaskSystem.Rule(action, GameManager.MoodyMask.PosActions[action]));
                     }
             );
             

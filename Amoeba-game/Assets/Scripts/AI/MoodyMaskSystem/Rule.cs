@@ -47,6 +47,16 @@ namespace NMoodyMaskSystem
         }
 
 
+        public Rule(string ruleName, MAction act)
+        {
+            RuleName = ruleName;
+            _selfGain = 0;
+            _againstGain = 0;
+            ActionToTrigger = act;
+            RuleInfoCont = default(RuleInfoCont);
+        }
+
+
         public bool Condition(Person self, List<Person> reacters = null, bool reaction = false, float preferenceModifier = 0)
         {
             if (SelfOther.ContainsKey(self)) 

@@ -55,6 +55,7 @@ public class Opinion : MonoBehaviour {
                     opinions.Find(x => x.Trait == NMoodyMaskSystem.TraitTypes.CharitableGreedy).Value);
 
                 DrawOpinion();
+                _opinionNotFound = false;
             }
             else
             {
@@ -86,6 +87,7 @@ public class Opinion : MonoBehaviour {
 
     public void ShowOpinion()
     {
+        Update();
         if (!_opinionNotFound)
         {
             line.gameObject.SetActive(true);

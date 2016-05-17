@@ -79,7 +79,7 @@ public class KeyHoldEnable : MonoBehaviour {
 
 	public void Update()
 	{
-        if(GameManager.UIAccessible)
+        if(GameManager.TutorialAccessible)
         { 
 		    for (int i = KeyAndItemToActivate.Count -1; i >=0; i--) 
 		    {

@@ -17,11 +17,19 @@ public class GameManager : Singleton<GameManager> {
     }
 
     [SerializeField]
-    bool _UIAccessible = true;
-    public static bool UIAccessible { get { return Instance._UIAccessible; } private set { Instance._UIAccessible = value; } }
-    public static void ToggleUIAccessible(bool on)
+    bool _TutorialAccessible = true;
+    public static bool TutorialAccessible { get { return Instance._TutorialAccessible; } private set { Instance._TutorialAccessible = value; } }
+    public static void ToggleTutorialAccessible(bool on)
     {
-        UIAccessible = on;
+        TutorialAccessible = on;
+    }
+
+    [SerializeField]
+    bool _actionSelectionAccessible = true;
+    public bool ActionSelectionAccessible { get { return Instance._actionSelectionAccessible; } private set { Instance._actionSelectionAccessible = value; } }
+    public void ToggleActionSelectionAccessible(bool on)
+    {
+        ActionSelectionAccessible = on;
     }
 
     [SerializeField]

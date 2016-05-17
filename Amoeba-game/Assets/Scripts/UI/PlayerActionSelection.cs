@@ -18,7 +18,8 @@ public class PlayerActionSelection : MonoBehaviour {
 
     public void ToggleActionSelection(string characterName, bool active)
     {
-        if (ActionsPanel != null)
+        //TODO: find a system instead of all these hard-coded playerNames.
+        if (ActionsPanel != null && GameManager.Instance.ActionSelectionAccessible && characterName != "Kasper".ToLower().Trim())
         {
             ActionsPanel.gameObject.SetActive(active);
             IsActive = active;
@@ -42,9 +43,7 @@ public class PlayerActionSelection : MonoBehaviour {
     public bool IsWithinActionCanvas(Vector2 point)
     {
         Vector2 size = Vector2.Scale(ActionsCanvas.rect.size, ActionsCanvas.lossyScale);
-        Vector2 position = Camera.main.WorldToScreenPoint(ActionsCanvas.position);
         Rect rect = new Rect(ActionsCanvas.position.x, ActionsCanvas.position.y - size.y, size.x, size.y);
-
         Vector2 screenPos = Camera.main.ScreenToWorldPoint(point);
 
         return rect.Contains(screenPos);
@@ -73,6 +72,7 @@ public class PlayerActionSelection : MonoBehaviour {
             buttonRect.pivot = new Vector2(0, 1);
             buttonRect.anchorMin = new Vector2(0,1);
             buttonObj.transform.SetParent(ActionsPanel);
+            buttonRect.localPosition = new Vector3(0, 0, 0);
             buttonRect.anchoredPosition = new Vector2(0, i * 25);
             
             buttonRect.localScale = new Vector3(1, 1, 1);

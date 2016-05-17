@@ -33,6 +33,7 @@ public class AMOEBAManager : MonoBehaviour {
     public Traits Traits{ get; private set; }
     Animator _emotionAnim;
     bool _opinionForcedVisible = false;
+    bool _opinionForcedNotVisible = false;
 
     void Awake()
     {
@@ -43,6 +44,11 @@ public class AMOEBAManager : MonoBehaviour {
     public void ToggleForceOpinionVisible(bool forced)
     {
         _opinionForcedVisible = forced;
+    }
+
+    public void ToggleForceOpinionNotVisible(bool forced)
+    {
+        _opinionForcedNotVisible = forced;
     }
 
 
@@ -244,7 +250,7 @@ public class AMOEBAManager : MonoBehaviour {
             }
         }
 
-        if(_opinionForcedVisible || (active && !_isActive))
+        if(_opinionForcedVisible || (!_opinionForcedNotVisible && active && !_isActive))
         {
             foreach(Opinion opinion in _opinions)
             {
@@ -252,7 +258,7 @@ public class AMOEBAManager : MonoBehaviour {
             }
             _isActive = true;
         }
-        else if(!_opinionForcedVisible && !active && _isActive)
+        else if(_opinionForcedNotVisible || (!_opinionForcedVisible && !active && _isActive))
         {
             foreach (Opinion opinion in _opinions)
             {

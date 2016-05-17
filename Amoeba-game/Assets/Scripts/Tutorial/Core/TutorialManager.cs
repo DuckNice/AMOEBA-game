@@ -10,7 +10,7 @@ public class TutorialManager : MonoBehaviour {
     
 	void Awake () 
 	{
-        if (GameManager.UIAccessible)
+        if (GameManager.TutorialAccessible)
         {
             if (_startTutorialAvailable && _startTutorialScreen != null)
             {

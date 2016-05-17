@@ -28,6 +28,7 @@ public class AMOEBAController : TutorialTrigger {
     public void Awake()
     {
         Play.BuildActionInfo();
+        GameManager.Instance.ToggleActionSelectionAccessible(false);
     }
 
 
@@ -70,10 +71,10 @@ public class AMOEBAController : TutorialTrigger {
     {
         WaitForEndOfFrame go = new WaitForEndOfFrame();
 
-        Vector3 direction = InitialEntryToPosition - transform.position;
-
         while (Vector3.Distance(transform.position, InitialEntryToPosition) > 0.05f)
         {
+            Vector3 direction = InitialEntryToPosition - transform.position;
+
             transform.Translate(direction.normalized * Time.deltaTime * Speed);
             yield return go;
         }

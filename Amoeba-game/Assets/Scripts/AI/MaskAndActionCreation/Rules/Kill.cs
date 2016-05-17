@@ -39,12 +39,13 @@ public class Kill
             return false;
         };
 
-        RulePreference killPreference = (self, other) => {
-            float ret = Calculator.UnboundAdd(-self.GetOpinionValue(TraitTypes.NiceNasty, other), -self.CalculateTraitType(TraitTypes.NiceNasty));
-            ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.angryFear], ret);
-            ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.arousDisgus], ret);
-            ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.hapSad], ret);
-            return ret;
+        RulePreference killPreference = (self, other, preferenceModifier) => {
+            float pref = Calculator.UnboundAdd(-self.GetOpinionValue(TraitTypes.NiceNasty, other), -self.CalculateTraitType(TraitTypes.NiceNasty));
+            pref += Calculator.UnboundAdd(-self.Moods[MoodTypes.angryFear], pref);
+            pref += Calculator.UnboundAdd(-self.Moods[MoodTypes.arousDisgus], pref);
+            pref += Calculator.UnboundAdd(-self.Moods[MoodTypes.hapSad], pref);
+            pref += Calculator.UnboundAdd(preferenceModifier, pref);
+            return pref;
         };
 
         return new ActionInfo(kill, killCondition, killPreference);

@@ -33,11 +33,11 @@ public class Flee
         };
 
 
-        RulePreference fleePreference = (self, other) => {
-            float reff = Calculator.UnboundAdd(self.Moods[MoodTypes.energTired], 0);
-            reff += Calculator.UnboundAdd(self.GetOpinionValue(TraitTypes.NiceNasty, self), reff);
-
-            return reff;
+        RulePreference fleePreference = (self, other, preferenceModifier) => {
+            float pref = Calculator.UnboundAdd(self.Moods[MoodTypes.energTired], 0);
+            pref += Calculator.UnboundAdd(self.GetOpinionValue(TraitTypes.NiceNasty, self), pref);
+            pref += Calculator.UnboundAdd(preferenceModifier, pref);
+            return pref;
         };
 
 

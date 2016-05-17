@@ -163,7 +163,7 @@ namespace NMoodyMaskSystem
         public float ReactMemory = 10f;
 
 
-        public Rule GetAction(float time) 
+        public Rule GetAction(float time, Dictionary<Rule, float> rulePreferenceModifiers) 
         {
             List<PosAItem> posAction = new List<PosAItem>();
 
@@ -209,13 +209,13 @@ namespace NMoodyMaskSystem
             AListCont aCont = new AListCont(_notPosActions, posAction);
 
             
-            RuleAndStr chosenAction = SelfPerception.ActionForLink(aCont, this, AbsTraits);
+            RuleAndStr chosenAction = SelfPerception.ActionForLink(aCont, this, AbsTraits, rulePreferenceModifiers);
 
             if (InterPersonal != null)
             {
                 foreach (Link curLink in InterPersonal)
                 {
-                    RuleAndStr curAction = curLink.ActionForLink(aCont, this, AbsTraits);
+                    RuleAndStr curAction = curLink.ActionForLink(aCont, this, AbsTraits, rulePreferenceModifiers);
 
                     if (curAction.StrOfAct > chosenAction.StrOfAct)
                     {
@@ -228,7 +228,7 @@ namespace NMoodyMaskSystem
             {
                 foreach (Link curLink in Culture)
                 {
-                    RuleAndStr curAction = curLink.ActionForLink(aCont, this, AbsTraits);
+                    RuleAndStr curAction = curLink.ActionForLink(aCont, this, AbsTraits, rulePreferenceModifiers);
 
                     if (curAction.StrOfAct > chosenAction.StrOfAct)
                     {
@@ -240,6 +240,7 @@ namespace NMoodyMaskSystem
 			return chosenAction.ChosenRule;
         }
         
+
         public Rule GetRule(string actionName) 
 		{ 
 			foreach(Rule r in SelfPerception.RoleMask.Rules.Values){

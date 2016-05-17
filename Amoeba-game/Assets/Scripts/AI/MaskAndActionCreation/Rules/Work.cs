@@ -34,8 +34,11 @@ public class Work
         };
 
 
-        RulePreference preference = (self, other) => {
-            return Calculator.UnboundAdd(self.Moods[MoodTypes.energTired], 0);
+        RulePreference preference = (self, other, preferenceModifier) => {
+            float pref = Calculator.UnboundAdd(self.Moods[MoodTypes.energTired], 0);
+            pref += Calculator.UnboundAdd(preferenceModifier, pref);
+
+            return pref;
         };
 
 

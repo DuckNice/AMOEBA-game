@@ -95,13 +95,13 @@ namespace NMoodyMaskSystem
         /// <param name="slf">self</param>
         /// <param name="absTraits">Traits</param>
         /// <returns></returns>
-        public RuleAndStr ActionForLink(AListCont actions, Person slf, Overlay absTraits) 
+        public RuleAndStr ActionForLink(AListCont actions, Person slf, Overlay absTraits, Dictionary<Rule, float> rulePreferenceModifiers = null) 
         {
             RuleAndStr actionToSend;
 
             try
             {
-				actionToSend = RoleMask.CalculateActionToUse(actions, slf, absTraits, RoleRefs);
+				actionToSend = RoleMask.CalculateActionToUse(actions, slf, absTraits, RoleRefs, rulePreferenceModifiers);
 					//debug.Write ("Trying from link "+self.name+" Maskname: "+ roleMask.GetMaskName() +" Rolename: "+roleName);
             }
             catch(Exception e)

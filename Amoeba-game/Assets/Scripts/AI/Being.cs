@@ -146,6 +146,8 @@ public class Being : MonoBehaviour
 		}
 	}
 
+    Dictionary<Rule, float> rulePreferenceModifiers = new Dictionary<Rule, float>();
+
     
     [HideInInspector]
     public Rule CurrentRule { get; protected set; }
@@ -154,8 +156,7 @@ public class Being : MonoBehaviour
     [SerializeField]
     private UnityEngine.UI.Text _actionText;
     public UnityEngine.UI.Text ActionText { get; protected set; }
-
-
+    
 
     public void playerInput(string input)
     {
@@ -225,7 +226,7 @@ public class Being : MonoBehaviour
             }
             else
             {
-                Rule _rule = self.GetAction(time);
+                Rule _rule = self.GetAction(time, rulePreferenceModifiers);
 
                 if (_rule.ActionToTrigger.Name.ToLower() != "empty")
                 {

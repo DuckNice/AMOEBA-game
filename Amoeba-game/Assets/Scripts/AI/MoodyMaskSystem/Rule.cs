@@ -47,7 +47,7 @@ namespace NMoodyMaskSystem
         }
 
 
-        public bool Condition(Person self, List<Person> reacters = null, bool reaction = false)
+        public bool Condition(Person self, List<Person> reacters = null, bool reaction = false, float preferenceModifier = 0)
         {
             if (SelfOther.ContainsKey(self)) 
                 SelfOther.Remove(self);
@@ -84,7 +84,7 @@ namespace NMoodyMaskSystem
                     {
                         if(RuleInfoCont.RulePreference != null)
                         {
-                            float _strength = RuleInfoCont.RulePreference(self, other);
+                            float _strength = RuleInfoCont.RulePreference(self, other, preferenceModifier);
                         
                             if(_strength > strength)
                             {

@@ -38,11 +38,12 @@ public class Eat {
             return false;
         };
 
-        RulePreference eatPreference = (self, other) => {
+        RulePreference eatPreference = (self, other, preferenceModifier) => {
             float ret = Calculator.UnboundAdd(-self.GetOpinionValue(TraitTypes.NiceNasty, other), -self.CalculateTraitType(TraitTypes.NiceNasty));
             ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.angryFear], ret);
             ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.arousDisgus], ret);
             ret += Calculator.UnboundAdd(-self.Moods[MoodTypes.hapSad], ret);
+            ret += Calculator.UnboundAdd(preferenceModifier, ret);
             return ret;
         };
 

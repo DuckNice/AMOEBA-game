@@ -164,7 +164,7 @@ namespace NMoodyMaskSystem
 
 	public delegate bool RuleConditioner(Person self, Person other, Person[] indiPpl = null);
 
-    public delegate float RulePreference(Person self, Person other);
+    public delegate float RulePreference(Person self, Person other, float preferenceModifier);
 
     public delegate float VisibilityCalculator(object[] misc = null);
 }

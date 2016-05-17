@@ -77,16 +77,9 @@ namespace NMoodyMaskSystem
 
             return Roles.FindIndex(x => x == rlN);
         }
+        
 
-        /// <summary>
-        /// </summary>
-        /// <param name="nPosA">notPossibleAction</param>
-        /// <param name="posA">possibleAction</param>
-        /// <param name="slf">self</param>
-        /// <param name="absTraits">traits</param>
-        /// <param name="rlRf">roleReference</param>
-        /// <returns></returns>
-        public RuleAndStr CalculateActionToUse(AListCont actions, Person slf, Overlay absTraits, Dictionary<Person, Dictionary<string, float>> rlRf)
+        public RuleAndStr CalculateActionToUse(AListCont actions, Person self, Overlay absTraits, Dictionary<Person, Dictionary<string, float>> roleReferences, Dictionary<Rule, float> rulePreferenceModifiers)
         {
             RuleAndStr chosenRule = new RuleAndStr();
 			chosenRule.ChosenRule = Rule.Empty;
@@ -112,22 +105,22 @@ namespace NMoodyMaskSystem
                         continue;
                 }
 
-                if (rlRf != null && rlRf.Count > 0)
+                if (roleReferences != null && roleReferences.Count > 0)
                 {
                     if (reaction){
                         for (int i = posPeople.Count - 1; i >= 0; i--){
-                            if (!rlRf[Person.Empty].ContainsKey(rule.Role) && (!rlRf.ContainsKey(posPeople[i]) || !rlRf[posPeople[i]].ContainsKey(rule.Role))){
+                            if (!roleReferences[Person.Empty].ContainsKey(rule.Role) && (!roleReferences.ContainsKey(posPeople[i]) || !roleReferences[posPeople[i]].ContainsKey(rule.Role))){
                                 posPeople.RemoveAt(i);
                             }
                         }
                     }
                     else
                     {
-                        if (!rlRf[Person.Empty].ContainsKey(rule.Role)){
+                        if (!roleReferences[Person.Empty].ContainsKey(rule.Role)){
                             reaction = true;
 
-                            foreach (Person person in rlRf.Keys){
-                                if (rlRf[person].ContainsKey(rule.Role) && person != Person.Empty){
+                            foreach (Person person in roleReferences.Keys){
+                                if (roleReferences[person].ContainsKey(rule.Role) && person != Person.Empty){
                                     posPeople.Add(person);
                                 }
                             }
@@ -143,33 +136,33 @@ namespace NMoodyMaskSystem
 
 				//debug.Write("Checking condition "+rule.ruleName+"  "+self.name);
 				
-                if(rule.Condition(slf, posPeople, reaction))
+                if(rule.Condition(self, posPeople, reaction, ((rulePreferenceModifiers.ContainsKey(rule)) ? rulePreferenceModifiers[rule] : 0)))
 				{
                     float maskCalculation = -99999999999f;
 
-					if (    rlRf != null && 
-                            rlRf.ContainsKey(rule.SelfOther[slf].Person) && 
-                            rlRf[rule.SelfOther[slf].Person].ContainsKey(rule.Role)){
+					if (    roleReferences != null && 
+                            roleReferences.ContainsKey(rule.SelfOther[self].Person) && 
+                            roleReferences[rule.SelfOther[self].Person].ContainsKey(rule.Role)){
 						maskCalculation = Calculator.CalculateRule(absTraits, rule, rule.RulesThatMightHappen, 
-                                                                    rlRf[rule.SelfOther[slf].Person][rule.Role]);
+                                                                    roleReferences[rule.SelfOther[self].Person][rule.Role]);
 					} 
-					else if (rlRf != null && 
-                            rlRf.ContainsKey(Person.Empty) && 
-                            rlRf[Person.Empty].ContainsKey(rule.Role)){
+					else if (roleReferences != null && 
+                            roleReferences.ContainsKey(Person.Empty) && 
+                            roleReferences[Person.Empty].ContainsKey(rule.Role)){
 						maskCalculation = Calculator.CalculateRule(absTraits, rule, rule.RulesThatMightHappen, 
-                                                                    rlRf[Person.Empty][rule.Role]);
+                                                                    roleReferences[Person.Empty][rule.Role]);
 					}
 					else{
-                        System.Console.WriteLine("Did not calculate "+rule.RuleName+". Maybe rolerefs did not contain person to check for: "+rule.SelfOther[slf].Person.Name);
+                        System.Console.WriteLine("Did not calculate "+rule.RuleName+". Maybe rolerefs did not contain person to check for: "+rule.SelfOther[self].Person.Name);
 						continue;
 					}
 
 
-                    System.Console.WriteLine("Calculating "+rule.ActionToTrigger.Name+" to "+rule.SelfOther[slf].Person.Name+" in "+_maskName);
+                    System.Console.WriteLine("Calculating "+rule.ActionToTrigger.Name+" to "+rule.SelfOther[self].Person.Name+" in "+_maskName);
 					
-                    float newActionStrength = maskCalculation + rule.SelfOther[slf].Pref;
+                    float newActionStrength = maskCalculation + rule.SelfOther[self].Pref;
 
-                    System.Console.WriteLine(maskCalculation+"  (+)  "+rule.SelfOther[slf].Pref+"  =  "+newActionStrength);
+                    System.Console.WriteLine(maskCalculation+"  (+)  "+rule.SelfOther[self].Pref+"  =  "+newActionStrength);
 					
                     if (newActionStrength > chosenRule.StrOfAct)
 					{

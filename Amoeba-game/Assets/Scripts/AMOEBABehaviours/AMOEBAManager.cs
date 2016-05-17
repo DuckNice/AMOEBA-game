@@ -41,6 +41,12 @@ public class AMOEBAManager : MonoBehaviour {
     }
 
 
+    void OnLevelWasLoaded(int lvl)
+    {
+        _instances.Clear();
+    }
+
+
     public void ToggleForceOpinionVisible(bool forced)
     {
         _opinionForcedVisible = forced;
@@ -179,7 +185,7 @@ public class AMOEBAManager : MonoBehaviour {
         
         //Set happy/sad & aroused/disgusted
         Color emotionColor = Color.Lerp(GameManager.Instance.Disgusted, GameManager.Instance.Aroused, arousDisgus);
-        emotionColor = Color.Lerp(emotionColor, GameManager.Instance.Sad, hapSad);
+        emotionColor = Color.Lerp(GameManager.Instance.Sad, emotionColor, hapSad);
         emotionColor.a = 1;
         _emotionRenderer.color = emotionColor;
 
@@ -192,8 +198,8 @@ public class AMOEBAManager : MonoBehaviour {
         //Set energetic/tired
         if (animationTimer != null)
         {
-            float relSpeed = (GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired;
-            animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.x + relSpeed;
+            float relSpeed = ((GameManager.MinMaxEmotionSpeed.y - GameManager.MinMaxEmotionSpeed.x) * energTired);
+            animationTimer.SecondsBetweenTicks = GameManager.MinMaxEmotionSpeed.y - relSpeed;
 
             if (GameManager.Instance.UseUnityAlphaBlending)
             {

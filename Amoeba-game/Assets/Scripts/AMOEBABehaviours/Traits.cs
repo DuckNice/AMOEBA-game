@@ -92,7 +92,7 @@ public class Traits : MonoBehaviour {
             _traitSpikes[i].localPosition = new Vector3((Mathf.Cos(Mathf.Deg2Rad * pieceAnglePos)) * diameter , (Mathf.Sin(Mathf.Deg2Rad * pieceAnglePos)) * diameter, -0.1f);
             _traitSpikes[i].localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
-            _traitSpikes[i].localRotation = Quaternion.Euler(0, 0, (pieceAnglePos - 90) - angleRotation);
+            _traitSpikes[i].localRotation = Quaternion.Euler(0, 0, (pieceAnglePos + 90) - angleRotation);
         }
 #endregion
     }
@@ -106,7 +106,7 @@ public class Traits : MonoBehaviour {
         charGreed = (charGreed != -1) ? (charGreed + 1) / 2 : 0;
         
         //Set Nice/Nasty
-        Color halo = Color.Lerp(GameManager.Instance.Nice, GameManager.Instance.Nasty, niceNasty);
+        Color halo = Color.Lerp(GameManager.Instance.Nasty, GameManager.Instance.Nice, niceNasty);
         halo.a = 1;
         _glowRenderer.color = halo;
 

@@ -48,7 +48,7 @@ public class AMOEBAController : TutorialTrigger {
         traitEmotionHighLight.ItemsToHighlight.AddRange(go);
 
         //TraitSliders
-        person = GameManager.MoodyMask.GetPerson("Dummy");
+        person = GameManager.MoodyMask.GetPerson("Someone");
 
         niceNasty.onValueChanged.AddListener((x) => { person.AbsTraits.Traits[TraitTypes.NiceNasty].SetTraitValue(x); });
         honFalse.onValueChanged.AddListener((x) => { person.AbsTraits.Traits[TraitTypes.HonestFalse].SetTraitValue(x); });
@@ -62,8 +62,7 @@ public class AMOEBAController : TutorialTrigger {
 
     public void StartEntryMovement()
     {
-        StartCoroutine(MoveToEntryPosition());       
-
+        StartCoroutine(MoveToEntryPosition());
     }
 
 
@@ -137,7 +136,7 @@ public class AMOEBAController : TutorialTrigger {
     {
         //TODO: Restrict selection to what action can be selected.
 
-        StartCoroutine(WaitForActionSelection());
+        StartCoroutine(WaitForActionSelected());
     }
 
     IEnumerator WaitForActionSelected()

@@ -42,11 +42,16 @@ public class PlayerActionSelection : MonoBehaviour {
 
     public bool IsWithinActionCanvas(Vector2 point)
     {
-        Vector2 size = Vector2.Scale(ActionsCanvas.rect.size, ActionsCanvas.lossyScale);
-        Rect rect = new Rect(ActionsCanvas.position.x, ActionsCanvas.position.y - size.y, size.x, size.y);
-        Vector2 screenPos = Camera.main.ScreenToWorldPoint(point);
+        if (ActionsCanvas != null)
+        {
+            Vector2 size = Vector2.Scale(ActionsCanvas.rect.size, ActionsCanvas.lossyScale);
+            Rect rect = new Rect(ActionsCanvas.position.x, ActionsCanvas.position.y - size.y, size.x, size.y);
+            Vector2 screenPos = Camera.main.ScreenToWorldPoint(point);
 
-        return rect.Contains(screenPos);
+            return rect.Contains(screenPos);
+        }
+
+        return false;
     }
 
 

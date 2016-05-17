@@ -1,4 +1,4 @@
-﻿using NMoodyMaskSystem;
+using NMoodyMaskSystem;
 
 namespace NMoodyMaskSetup
 {

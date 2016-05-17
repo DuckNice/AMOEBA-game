@@ -32,11 +32,17 @@ public class AMOEBAManager : MonoBehaviour {
     
     public Traits Traits{ get; private set; }
     Animator _emotionAnim;
-
+    bool _opinionForcedVisible = false;
 
     void Awake()
     {
         _instances.Add(this);
+    }
+
+
+    public void ToggleForceOpinionVisible(bool forced)
+    {
+        _opinionForcedVisible = forced;
     }
 
 
@@ -212,9 +218,10 @@ public class AMOEBAManager : MonoBehaviour {
         }
     }
 
+
     public void ToggleIsSelected()
     {
-        if(_ignoreRange || (Mathf.Pow((PlayerMotion.MouseClicked.x - transform.position.x), 2) + Mathf.Pow((PlayerMotion.MouseClicked.y - transform.position.y), 2) < Mathf.Pow(ClickRadius, 2)))
+        if( (_ignoreRange || (Mathf.Pow((PlayerMotion.MouseClicked.x - transform.position.x), 2) + Mathf.Pow((PlayerMotion.MouseClicked.y - transform.position.y), 2) < Mathf.Pow(ClickRadius, 2))))
         {
             ToggleActiveOpinions(true);
         }
@@ -237,7 +244,7 @@ public class AMOEBAManager : MonoBehaviour {
             }
         }
 
-        if(active && !_isActive)
+        if(_opinionForcedVisible || (active && !_isActive))
         {
             foreach(Opinion opinion in _opinions)
             {
@@ -245,7 +252,7 @@ public class AMOEBAManager : MonoBehaviour {
             }
             _isActive = true;
         }
-        else if(!active && _isActive)
+        else if(!_opinionForcedVisible && !active && _isActive)
         {
             foreach (Opinion opinion in _opinions)
             {

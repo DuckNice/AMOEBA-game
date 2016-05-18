@@ -1,31 +1,23 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
-public class EventLibrary : MonoBehaviour {
-    
+public class EventLibrary : Singleton<EventLibrary> {
 
-   // eat
-   // hit
-   // warn
-   // wait
-   // play
-   // watch out
-   // work
-   // brew
-   // sleep
-   // flee
-   // chase
-   
-    
-    
+    // eat
+    // play
+    // work
+    // sleep
+    // flee
+    // chase
+
+    public Dictionary<string, float> ActionDramas = new Dictionary<string, float>();
+
 	// Use this for initialization
-	void Start () {
-	    
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
+	void Awake () {
+        ActionDramas.Add("eat", 0.3f);
+        ActionDramas.Add("play", 0.005f);
+        ActionDramas.Add("work", 0.005f);
+        ActionDramas.Add("sleep", 0.001f);
+        ActionDramas.Add("flee", 0.1f);
+        ActionDramas.Add("chase", 0.1f);
+    }
 }

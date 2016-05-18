@@ -136,9 +136,9 @@ public class NPCCreator
         #region addingRulesToMask
         
         // INTERPERSONAL
-        MoodyMask.AddRuleToMask("Rivalry", "Enemy", "chat", 0.2f);
+   //     MoodyMask.AddRuleToMask("Rivalry", "Enemy", "chat", 0.2f);
         
-        MoodyMask.AddRuleToMask("Rivalry", "Enemy", "greet", -0.4f);
+   //     MoodyMask.AddRuleToMask("Rivalry", "Enemy", "greet", -0.4f);
 
 		#endregion addingRulesToMask
         

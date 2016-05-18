@@ -146,7 +146,7 @@ public class Being : MonoBehaviour
 		}
 	}
 
-    Dictionary<Rule, float> rulePreferenceModifiers = new Dictionary<Rule, float>();
+    public static Dictionary<Rule, float> rulePreferenceModifiers = new Dictionary<Rule, float>();
 
     
     [HideInInspector]

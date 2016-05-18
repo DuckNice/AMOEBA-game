@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 using NMoodyMaskSystem;
@@ -20,7 +20,7 @@ public class Work
             // subject.Moods[MoodTypes.angryFear] += Calculator.UnboundAdd(0.1f, subject.Moods[MoodTypes.angryFear]);
         };
         //Rain should be rule-specific, not action specific.
-        GameManager.MoodyMask.AddAction(new MAction("work", GameManager.MoodyMask, action, 5f));
+        GameManager.MoodyMask.AddAction(new MAction("work", GameManager.MoodyMask, action, 5f, needsDirect: false));
 
 
         RuleConditioner condition = (self, other, indPpl) =>

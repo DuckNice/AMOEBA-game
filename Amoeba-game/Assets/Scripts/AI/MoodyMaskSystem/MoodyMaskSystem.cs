@@ -123,7 +123,7 @@ namespace NMoodyMaskSystem
            actName = actName.ToLower().Trim();
            
            if(PplAndMasks.FindRule(ruleName) == null){
-               PplAndMasks.CreateNewRule(ruleName, PosActions[actName.ToLower().Trim()], selfGain, againstGain, new RuleInfoCont(ruleCondition, rulePreference, visCalc));
+               PplAndMasks.CreateNewRule(ruleName, PosActions[actName], selfGain, againstGain, new RuleInfoCont(ruleCondition, rulePreference, visCalc));
            }
            else
            {

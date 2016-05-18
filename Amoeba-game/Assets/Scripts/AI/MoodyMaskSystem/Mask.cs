@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,7 +35,10 @@ namespace NMoodyMaskSystem
         {
             rRlN = rRlN.ToLower();
 
-            Rules.Add(rRlN, r.HalfDeepCopy());
+            if (!Rules.ContainsKey(rRlN))
+            {
+                Rules.Add(rRlN, r.HalfDeepCopy());
+            }
         }
 
         /// <summary>

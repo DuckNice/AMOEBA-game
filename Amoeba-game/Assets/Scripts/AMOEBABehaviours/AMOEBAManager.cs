@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEditor.Animations;
+//using UnityEditor.Animations;
 using System.Collections;
 using System.Collections.Generic;
 using NMoodyMaskSystem;
@@ -26,7 +26,7 @@ public class AMOEBAManager : MonoBehaviour {
     protected List<Opinion> _opinions = new List<Opinion>();
     protected UtilityTimer animationTimer;
     [SerializeField]
-    AnimatorController _emotionAnimator;
+    //AnimatorController _emotionAnimator;
 
     SpriteRenderer _emotionRenderer;
     
@@ -95,7 +95,7 @@ public class AMOEBAManager : MonoBehaviour {
         emotions.transform.localPosition = new Vector3(0, 1, 0);
         emotions.gameObject.name = "Emotion";
         _emotionAnim = emotions.gameObject.AddComponent<Animator>();
-        _emotionAnim.runtimeAnimatorController = _emotionAnimator;
+       // _emotionAnim.runtimeAnimatorController = _emotionAnimator;
 
         Traits = Traits.BuildTrait(gameObject);
 

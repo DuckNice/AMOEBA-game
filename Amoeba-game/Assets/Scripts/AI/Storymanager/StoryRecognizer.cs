@@ -17,27 +17,46 @@ public struct StructureContainer
 }
 
 public class StoryRecognizer : MonoBehaviour {
-    public static List<StorySegment> PredictClosestStructure(List<Person> peopleToAccountFor, StructureLibrary structureLibrary)
+    public static List<float> PredictClosestStructure(List<Person> peopleToAccountFor)
     {
-        List<StructureContainer> go = new List<StructureContainer>();
+        //TODO: this makes time static, make a dynamic way to do that.
+        int timeForEachSegment = 120 / structure.Count;
 
-        foreach (List<StorySegment> structure in structureLibrary.StoryStructures)
+        List<List<HistoryItem>> segmentedItems = new List<List<HistoryItem>>();
+
+        int q = 0;
+
+        for (int i = 0; i < structure.Count; i++)
         {
-            go.AddRange(StoryPredicter.Get5BestStructures(structure));
+            segmentedItems.Add(new List<HistoryItem>());
+
+            while (q < GameManager.MoodyMask.HistoryBook.Count && GameManager.MoodyMask.HistoryBook[q].GetTime() < timeForEachSegment * i)
+            {
+                segmentedItems[i].Add(GameManager.MoodyMask.HistoryBook[q]);
+
+                q++;
+            }
+
+            if (q >= GameManager.MoodyMask.HistoryBook.Count)
+                break;
         }
 
+        List<float> storySoFar = new List<float>();
 
-        StructureContainer bestContainer = default(StructureContainer);
-
-        foreach (StructureContainer strucCont in go)
+        for (int i = 0; i < segmentedItems.Count; i++)
         {
-            if (!bestContainer.Equals(default(StructureContainer)))
-                bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
-            else
-                bestContainer = strucCont;
+            float go = 0f;
+
+            foreach (HistoryItem histItem in segmentedItems[i])
+            {
+                //TODO make fallback or fix actions with big/small letters
+                if (EventLibrary.ActionDramas.ContainsKey(histItem.GetAction().Name))
+                    go += EventLibrary.ActionDramas[histItem.GetAction().Name];
+            }
+
+            storySoFar.Add(go);
         }
 
-
-        return bestContainer.Structure;
+        return storySoFar;
     }
 }

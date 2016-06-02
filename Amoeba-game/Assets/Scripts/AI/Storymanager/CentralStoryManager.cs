@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CentralStoryManager : MonoBehaviour {
-    StructureLibrary _strucLib = new StructureLibrary();
-    EventLibrary _eventLib = new EventLibrary();
-
     List<StorySegment> _currentStory = new List<StorySegment>();
     WaitForSeconds _selectionWaiter = new WaitForSeconds(5);
 
@@ -21,7 +18,7 @@ public class CentralStoryManager : MonoBehaviour {
         {
             try
             {
-                _currentStory = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople(), _strucLib);
+                _currentStory = StoryPredicter.Get5BestStructures();
 
                 Being.actionPreferenceModifiers.Clear();
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -134,9 +134,9 @@ namespace NMoodyMaskSystem
 
         public void AddAction(MAction action)
         {
-            if(!PosActions.ContainsKey(action.Name.ToLower()))
+            if(!PosActions.ContainsKey(action.Name.ToLower().Trim()))
             {
-                PosActions.Add(action.Name.ToLower(), action);
+                PosActions.Add(action.Name.ToLower().Trim(), action);
             }
             else
             {

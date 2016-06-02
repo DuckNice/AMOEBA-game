@@ -150,13 +150,7 @@ public class GameManager : Singleton<GameManager> {
         }
     }
 
-
-    public void ChangeScene(string sceneName)
-    {
-        Application.LoadLevel(sceneName);
-    }
-
-
+    
     void Update()
     {
         if(GameOn)

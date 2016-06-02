@@ -1,30 +1,41 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using NMoodyMaskSystem;
 
 public class CentralStoryManager : MonoBehaviour {
-    StructureLibrary strucLib = new StructureLibrary();
+    StructureLibrary _strucLib = new StructureLibrary();
+    EventLibrary _eventLib = new EventLibrary();
 
-    List<StorySegment> currentStory = new List<StorySegment>();
-    WaitForSeconds selectionWaiter = new WaitForSeconds(5);
+    List<StorySegment> _currentStory = new List<StorySegment>();
+    WaitForSeconds _selectionWaiter = new WaitForSeconds(5);
 
 
     void Start () {
-        
         StartCoroutine(StorySelector());
     }
-
-	
-	void Update () {
-	    
-	}
-
-
+    
+    
     protected IEnumerator StorySelector()
     {
-        currentStory = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople(), strucLib);
+        while (true)
+        {
+            try
+            {
+                _currentStory = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople(), _strucLib);
 
-        yield return selectionWaiter; 
+                Being.actionPreferenceModifiers.Clear();
+
+                foreach (StorySegment segment in _currentStory)
+                {
+                    if (!Being.actionPreferenceModifiers.ContainsKey(segment.action))
+                        Being.actionPreferenceModifiers.Add(segment.action, segment.PreferenceStrength);
+                    else
+                        Being.actionPreferenceModifiers[segment.action] += segment.PreferenceStrength;
+                }
+            }
+            catch { }
+
+            yield return _selectionWaiter;
+        }
     }
 }

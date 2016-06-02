@@ -7,18 +7,22 @@ public struct StorySegment
 {
     public StorySegment(float climaxticEffect)
     {
-        ClimaxicEffect = climaxticEffect;
+        ClimacticEffect = climaxticEffect;
+        action = default(NMoodyMaskSystem.MAction);
+        PreferenceStrength = 0.0f;
     }
 
-    public float ClimaxicEffect { get; private set; }
+    public float ClimacticEffect { get; private set; }
+    public NMoodyMaskSystem.MAction action;
+    public float PreferenceStrength;
 };
 
-public class StructureLibrary : MonoBehaviour {
+public class StructureLibrary {
     public List<List<StorySegment>> StoryStructures = new List<List<StorySegment>>();
     
 
 	// Use this for initialization
-	void Awake () {
+	public StructureLibrary() {
 
         //Freytag's model
 

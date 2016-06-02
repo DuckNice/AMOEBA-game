@@ -156,7 +156,9 @@ public class Being : MonoBehaviour
     [SerializeField]
     private UnityEngine.UI.Text _actionText;
     public UnityEngine.UI.Text ActionText { get; protected set; }
-    
+
+    public static Dictionary<MAction, float> actionPreferenceModifiers = new Dictionary<MAction, float>();
+
 
     public void playerInput(string input)
     {

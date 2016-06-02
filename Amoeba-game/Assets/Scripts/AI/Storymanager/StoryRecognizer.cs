@@ -31,7 +31,7 @@ public class StoryRecognizer : MonoBehaviour {
 
         foreach (StructureContainer strucCont in go)
         {
-            if (bestContainer.Equals(default(StructureContainer)))
+            if (!bestContainer.Equals(default(StructureContainer)))
                 bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
             else
                 bestContainer = strucCont;

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class EventLibrary {
 
-    public static Dictionary<string, float> ActionDramas = new Dictionary<string, float>();
+    public static Dictionary<string, float> EventTypes = new Dictionary<string, float>();
     
-
     public static void AddEvent(string eventName, float influence)
     {
-        ActionDramas.Add(eventName, influence);
+        lock(EventTypes)
+            EventTypes.Add(eventName, influence);
     }
 }

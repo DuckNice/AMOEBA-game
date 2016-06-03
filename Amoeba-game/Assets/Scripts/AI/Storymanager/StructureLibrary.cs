@@ -18,11 +18,20 @@ public struct StorySegment
 };
 
 public class StructureLibrary {
-    public static List<List<StorySegment>> StoryStructures = new List<List<StorySegment>>();
-    
+    public static List<List<StorySegment>> StoryStructures { get; private set; }
+    public static int MaxLength = -1;
 
     public static void AddStructureLibrary(List<StorySegment> structure)
     {
-        StoryStructures.Add(structure);
+        lock(StoryStructures)
+        {
+            if (StoryStructures == null)
+                StoryStructures = new List<List<StorySegment>>();
+
+            StoryStructures.Add(structure);
+
+            //Make sure that we always have the data for the longest structure.
+            MaxLength = (structure.Count > MaxLength) ? structure.Count : MaxLength;
+        }
     }
 }

@@ -1,0 +1,39 @@
+#pragma kernel Recognizing
+
+Texture2D<float4> StoryStructures;
+//Preferably this would be a float4 for the sake of OpenGL compatability. Unfortunately there was no time to compress it into that.
+StructuredBuffer<float2> HistoryItems;
+StructuredBuffer<float> ReturnStoryFitnesses;
+
+//The amount of threads called to do the job 1 thread takes care of 1 story-structure. (NOTE: Need to find is no story-structure is present At a later iteration).
+[numthreads(1024,1,1)]
+void Recognizing (uint3 id : SV_DispatchThreadID)
+{
+	//Right now time is static. Ideally this algorithm could be able to make several interpolated guesses at there you could be in the story. Perhaps an extra dimension to the threadpool (current threadlimit for X*Y*Z is 1024, so we would need to spread this out into thread-groups). 
+	int timeForEachSegment = 120 / StoryStructures[id.x].Count;
+	
+	int structureLength = 0;
+
+	for(int i = StoryStructures[id.x]; i >= 0; i--)
+	{
+			//The only good way to do if-statements in shader-code. Will return 1 if last value is bigger than first value.
+		structureLength += step( 0.000001f, StoryStructures[id.x][i]);
+	}
+
+	//Add all the events which have happened so far into piles of event happenings, and calculate how the segments fit to the currently evaluated structure.
+	float[] segments = new float[StoryStructures[id.x].Count];
+
+    for (int i = 0; i < HistoryItems.Count; i++)
+    {
+		//Find the current event's climatic effect. 
+		float effect = HistoryBook[i].x;
+
+		//Decide which segment the current event's time belongs to and add the corresponding event there.
+		segments[floor(HistoryBook[i].y / timeForEachSegment)] += effect;
+	}
+
+	//Did not finish interpolating fitness in time. It is supposed to average how close the pools are to fitting the storystructure. 
+    int fitness = 0;
+	
+	ReturnStoryFitnesses[id.x] = fitness;
+}

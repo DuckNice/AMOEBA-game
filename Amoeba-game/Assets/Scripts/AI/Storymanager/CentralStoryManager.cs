@@ -6,12 +6,13 @@ using NMoodyMaskSystem;
 public class CentralStoryManager : MonoBehaviour {
     public static List<StorySegment> _currentStory = new List<StorySegment>();
     public static volatile int newStory;
-    WaitForSeconds _selectionWaiter = new WaitForSeconds(5);
     Thread _predicterThread;
     Thread _selectorThread;
 
 
     void Start () {
+        //Setup the compute shader and the static buffers.
+        StoryRecognizer.SetupComputeShader();
         //Start the seperate threads to make sure that story selection and prediction is not cluttering the main thread..
         _predicterThread = new Thread(StoryPredicter.MainLoop);
         _selectorThread =  new Thread(StorySelector);
@@ -25,8 +26,10 @@ public class CentralStoryManager : MonoBehaviour {
     }
 
 
+    //Called when the Story manager is destroyed.
     void OnDestroy()
     {
+        //Stop tthe threads and wait for them to finish (NOTE: Given that normal destructurs only have a set amount of time before they are brute-forced, this might also be the case OnDestroy. In that case there's a risk that the threads might not close in time). 
         _shouldStop = true;
         StoryPredicter.RequestStop();
         _selectorThread.Join();
@@ -39,7 +42,7 @@ public class CentralStoryManager : MonoBehaviour {
     static volatile int curModifier = -1;
     bool _shouldStop = false;
 
-    //The main output from our program. The returned structure is a copy of the currently valid Dictionary
+    //The main output to the rest of the world from our program. The returned structure is a copy of the currently valid Dictionary
     public Dictionary<MAction, float> GetActionModifiers()
     {
         if(curModifier == 0)
@@ -74,28 +77,29 @@ public class CentralStoryManager : MonoBehaviour {
                 Thread.Sleep(10);
             }
 
-            lock(_currentStory)
+            //I did not incorporate the 2-alternating array system here. Since this system want the newest data, and would need to re-iterate on the new data anyway, I chose to let this function finish 
+            //before the new structure could be inserted. This will give the rest of the outside system enough time to use this data for anything, before it's given new stuff again.
+            //Future: Have this function break what it's doing, and wait for the newer data to get written in a seperate array, if this program notices that new data is being written.
+            //NOTE: Since The predicter system is not finished, no data is ever passed through here.
+            Dictionary<MAction, float> modifiers = (curModifier != 0) ? _actionPreferenceModifiers0 : _actionPreferenceModifiers1;
+            modifiers.Clear();
+
+            lock (_currentStory)
             {
                 try
                 {
-                    Being.actionPreferenceModifiers.Clear();
+                    modifiers.Clear();
 
                     foreach (StorySegment segment in _currentStory)
                     {
-                        if (!_actionPreferenceModifiers0.ContainsKey(segment.action))
-                            _actionPreferenceModifiers0.Add(segment.action, segment.PreferenceStrength);
+                        if (!modifiers.ContainsKey(segment.action))
+                            modifiers.Add(segment.action, segment.PreferenceStrength);
                         else
-                            _actionPreferenceModifiers0[segment.action] += segment.PreferenceStrength;
+                            modifiers[segment.action] += segment.PreferenceStrength;
                     }
                 }
                 catch { }
             }
-
-            //
-            Dictionary<MAction, float> modifiers = (curModifier != 0) ? _actionPreferenceModifiers0 : _actionPreferenceModifiers1;
-            modifiers.Clear();
-
-            
 
             //Change to new ModifierList and update which version is used.
             curStory = newStory;

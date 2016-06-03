@@ -16,6 +16,7 @@ public struct StructureContainer
     }
 }
 
+
 public class StoryRecognizer : MonoBehaviour {
     public static List<float> PredictClosestStructure(List<Person> peopleToAccountFor)
     {

@@ -4,36 +4,52 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class StoryPredicter : MonoBehaviour {
-    public static List<StructureContainer> Get5BestStructures()
+    public static void MainLoop()
     {
-        List<StructureContainer> bestStructures = new List<StructureContainer>();
-
-        List<float> storySoFar = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople());
-        
-        StructureContainer bestContainer = default(StructureContainer);
-
-        foreach (StructureContainer strucCont in go)
+        while (!_shouldStop)
         {
-            if (!bestContainer.Equals(default(StructureContainer)))
-                bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
-            else
-                bestContainer = strucCont;
+            if(CloseEnough())
+            {
+                continue;
+            }
+
+            List<float> storySoFar = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople());
+
+            List<StorySegment> bestStructures = new List<StorySegment>();
+
+            StructureContainer bestContainer = default(StructureContainer);
+
+            foreach (StructureContainer strucCont in go)
+            {
+                if (!bestContainer.Equals(default(StructureContainer)))
+                    bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
+                else
+                    bestContainer = strucCont;
+            }
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                bestStructures.Add(StructureCreator(structure, storySoFar));
+            }
+
+            if(!_shouldStop)
+                CentralStoryManager.newStory++;
         }
-
-
-        for (int i = 0; i < 5; i++)
-        {
-            bestStructures.Add(StructureCreator(structure, storySoFar));
-        }
-
-
-        return bestStructures;
     }
 
+    static bool _shouldStop = false;
 
+    public static void RequestStop()
+    {
+        _shouldStop = true;
+    }
+    
 
-
-
+    static bool CloseEnough()
+    {
+        return false;
+    }
 
 
     public static StructureContainer StructureCreator(List<StorySegment> structure, List<float> storySoFar)
@@ -43,7 +59,7 @@ public class StoryPredicter : MonoBehaviour {
         List<StorySegment> go = new List<StorySegment>();
 
         int i = 0; 
-        while (fitness < 0.8f && i < 10)
+        while (!_shouldStop && fitness < 0.8f && i < 10)
         {
             i++;
 
@@ -62,7 +78,6 @@ public class StoryPredicter : MonoBehaviour {
                 fitness += EventLibrary.ActionDramas.Values.ToList()[index];
                 go.Add(newSegment);
             }
-
         }
 
         

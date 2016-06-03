@@ -14,6 +14,7 @@ public class MMPCourseScript : MonoBehaviour {
         CreateStructures(10000, Random.Range(1, 10), 0);
     }
 	
+
 	void Update () {
         Debug.Log("Number of possible actions: " + _moodyMask.PosActions.Count + ", number of action specifiers: " + EventLibrary.ActionDramas.Count + ".");
 
@@ -29,8 +30,6 @@ public class MMPCourseScript : MonoBehaviour {
 
     void CreateStructures(int iterations, int skips, int number)
     {
-        //Freytag's model
-
         List<StorySegment> structure = new List<StorySegment>();
 
         int length = Random.Range(5, 20);

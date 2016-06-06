@@ -23,11 +23,12 @@ public class StructureLibrary {
 
     public static void AddStructureLibrary(List<StorySegment> structure)
     {
-        lock(StoryStructures)
-        {
-            if (StoryStructures == null)
-                StoryStructures = new List<List<StorySegment>>();
+        //CHANGE: Moved null check outside, as lock cannot happen on null
+        if (StoryStructures == null)
+            StoryStructures = new List<List<StorySegment>>();
 
+        lock (StoryStructures)
+        {
             StoryStructures.Add(structure);
 
             //Make sure that we always have the data for the longest structure.

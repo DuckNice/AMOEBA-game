@@ -26,18 +26,15 @@ public class CentralStoryManager : MonoBehaviour {
     void Update()
     {
         if (Input.anyKey)
+        {
+            //Stop tthe threads and wait for them to finish (NOTE: Given that normal destructurs only have a set amount of time before they are brute-forced, this might also be the case OnDestroy. In that case there's a risk that the threads might not close in time). 
+            //CHANGE: Moved the stuff from OnDestry here so the object isn' destroyed.
+            _shouldStop = true;
+            StoryPredicter.RequestStop();
+            _selectorThread.Join();
+            _predicterThread.Join();
             Destroy(this);
-    }
-
-
-    //Called when the Story manager is destroyed.
-    void OnDestroy()
-    {
-        //Stop tthe threads and wait for them to finish (NOTE: Given that normal destructurs only have a set amount of time before they are brute-forced, this might also be the case OnDestroy. In that case there's a risk that the threads might not close in time). 
-        _shouldStop = true;
-        StoryPredicter.RequestStop();
-        _selectorThread.Join();
-        _predicterThread.Join();
+        }
     }
 
 

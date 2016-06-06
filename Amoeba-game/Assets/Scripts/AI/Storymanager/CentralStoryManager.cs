@@ -16,6 +16,10 @@ public class CentralStoryManager : MonoBehaviour {
         //Start the seperate threads to make sure that story selection and prediction is not cluttering the main thread..
         _predicterThread = new Thread(StoryPredicter.MainLoop);
         _selectorThread =  new Thread(StorySelector);
+        //CHANGE: threads should terminate when main does.
+        _predicterThread.IsBackground = true;
+        _selectorThread.IsBackground = true;
+        _selectorThread.Priority = System.Threading.ThreadPriority.BelowNormal;
     }
 
 

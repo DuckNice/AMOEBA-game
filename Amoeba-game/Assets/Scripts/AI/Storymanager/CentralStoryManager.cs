@@ -20,6 +20,9 @@ public class CentralStoryManager : MonoBehaviour {
         _predicterThread.IsBackground = true;
         _selectorThread.IsBackground = true;
         _selectorThread.Priority = System.Threading.ThreadPriority.BelowNormal;
+        //CHANGE: Started the threads.
+        _predicterThread.Start();
+        _selectorThread.Start();
     }
 
 
@@ -28,13 +31,25 @@ public class CentralStoryManager : MonoBehaviour {
         if (Input.anyKey)
         {
             //Stop tthe threads and wait for them to finish (NOTE: Given that normal destructurs only have a set amount of time before they are brute-forced, this might also be the case OnDestroy. In that case there's a risk that the threads might not close in time). 
-            //CHANGE: Moved the stuff from OnDestry here so the object isn' destroyed.
-            _shouldStop = true;
-            StoryPredicter.RequestStop();
-            _selectorThread.Join();
-            _predicterThread.Join();
+            //CHANGE: Moved the stuff from OnDestry here so the object isnt' destroyed and added thread recognizing.
+            if (_selectorThread.ThreadState != ThreadState.Unstarted && _selectorThread.ThreadState != ThreadState.Unstarted)
+            {
+                _shouldStop = true;
+                StoryPredicter.RequestStop();
+                _predicterThread.Join(1000);
+                _selectorThread.Join(1000);
+                
+                //Added safety and timeout for the join (this will make the main thread pause, which is ba.d Consider making a usermode loop instead.) 
+                if (_predicterThread.ThreadState != ThreadState.Stopped)
+                    _predicterThread.Abort();
+                if (_predicterThread.ThreadState != ThreadState.Stopped)
+                    _predicterThread.Abort();
+            }
+
             Destroy(this);
         }
+        
+        StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople());
     }
 
 
@@ -61,8 +76,7 @@ public class CentralStoryManager : MonoBehaviour {
             }
         }
     }
-
-
+            
     protected void StorySelector()
     {
         int curStory = 0;
@@ -82,6 +96,7 @@ public class CentralStoryManager : MonoBehaviour {
             //before the new structure could be inserted. This will give the rest of the outside system enough time to use this data for anything, before it's given new stuff again.
             //Future: Have this function break what it's doing, and wait for the newer data to get written in a seperate array, if this program notices that new data is being written.
             //NOTE: Since The predicter system is not finished, no data is ever passed through here.
+            //The barrier construct would be great here to make sure that the prediction and story-sorting is synchronized, however, sadly, it's a .NET 4 feature.
             Dictionary<MAction, float> modifiers = (curModifier != 0) ? _actionPreferenceModifiers0 : _actionPreferenceModifiers1;
             modifiers.Clear();
 

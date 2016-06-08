@@ -14,7 +14,7 @@ public class MMPCourseScript : MonoBehaviour {
     void Awake () {
         _moodyMask = GameManager.MoodyMask;
 
-        CreateActions(10000, Random.Range(1, 10), 0);
+        CreateActions(1000, Random.Range(1, 10), 0);
         CreateStructures(1024, 1, 0);
     }
 	
@@ -30,6 +30,10 @@ public class MMPCourseScript : MonoBehaviour {
             }
         }
 	}
+
+
+
+
 
     //Create 1024 structures of random length (incorporated in a recursion-algorithm for the heck of it).
     void CreateStructures(int iterations, int skips, int number)
@@ -57,6 +61,7 @@ public class MMPCourseScript : MonoBehaviour {
     }
 
 
+    //CHANGE: Creates stackoverflow sometimes took iterations down to 1000.
     //Create a list of events (actions) of random strength same recursive structure as the structure creator.
     void CreateActions(int iterations, int skips, int number)
     {

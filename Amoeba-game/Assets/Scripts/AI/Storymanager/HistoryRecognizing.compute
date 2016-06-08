@@ -1,35 +1,36 @@
 #pragma kernel Recognizing
 
 Texture2D<float4> StoryStructures;
+//CHANGE: legth oif each story is now manual input.
+StructuredBuffer<uint> StoryLengths;
+float2 structureDimensions;
 //Preferably this would be a float4 for the sake of OpenGL compatability. Unfortunately there was no time to compress it into that.
 StructuredBuffer<float2> HistoryItems;
-StructuredBuffer<float> ReturnStoryFitnesses;
+//CHANGE: length of historyitems-list is now manually inserted.
+float HistoryItemsLength;
+RWStructuredBuffer<float> ReturnStoryFitnesses;
 
 //The amount of threads called to do the job 1 thread takes care of 1 story-structure. (NOTE: Need to find is no story-structure is present At a later iteration).
 [numthreads(1024,1,1)]
 void Recognizing (uint3 id : SV_DispatchThreadID)
 {
 	//Right now time is static. Ideally this algorithm could be able to make several interpolated guesses at there you could be in the story. Perhaps an extra dimension to the threadpool (current threadlimit for X*Y*Z is 1024, so we would need to spread this out into thread-groups). 
-	int timeForEachSegment = 120 / StoryStructures[id.x].Count;
-	
-	int structureLength = 0;
-
-	for(int i = StoryStructures[id.x]; i >= 0; i--)
-	{
-			//The only good way to do if-statements in shader-code. Will return 1 if last value is bigger than first value.
-		structureLength += step( 0.000001f, StoryStructures[id.x][i]);
-	}
+	//CHANGE: Made a buffer which gives the individual length.	
+	uint structureLength = StoryLengths[id.x];
+	uint timeForEachSegment = 120 / structureLength;
+	//CHANGE: Removed the for loop if statement, measuring the length of the array.
 
 	//Add all the events which have happened so far into piles of event happenings, and calculate how the segments fit to the currently evaluated structure.
-	float[] segments = new float[StoryStructures[id.x].Count];
+	//Changed array to something I know we will never reach.
+	float segments[20];
 
-    for (int i = 0; i < HistoryItems.Count; i++)
+    for (int i = 0; i < HistoryItemsLength; i++)
     {
-		//Find the current event's climatic effect. 
-		float effect = HistoryBook[i].x;
+		//Find the current event's climatic effect.
+		float effect = HistoryItems[i].x;
 
 		//Decide which segment the current event's time belongs to and add the corresponding event there.
-		segments[floor(HistoryBook[i].y / timeForEachSegment)] += effect;
+		segments[floor(HistoryItems[i].y / timeForEachSegment)] += effect;
 	}
 
 	//Did not finish interpolating fitness in time. It is supposed to average how close the pools are to fitting the storystructure. 

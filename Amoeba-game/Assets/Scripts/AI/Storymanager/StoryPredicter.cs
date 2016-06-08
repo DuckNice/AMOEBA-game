@@ -9,36 +9,56 @@ public class StoryPredicter : MonoBehaviour {
         while (!_shouldStop)
         {
             //Should only re-evaluate the story if we are detering significantly from the current structure.
-            if(CloseEnough())
+            //Not gona call spinwait Thread.sleep bloacks immediately which is fine.
+            //CHANGE: this was an if-statement for some reason.
+            while(CloseEnough())
             {
                 Thread.Sleep(1000);
-                continue;
             }
 
+            StoryRecognizer.ShouldStartCompute = true;
 
-            int storyStructure = StoryRecognizer.PredictClosestStructure(GameManager.MoodyMask.GetAllPeople());
 
-            //Relevant code ends here (This is part of the old system which will be improved after this exam).
-
-            /*List<StorySegment> bestStructures = new List<StorySegment>();
-
-            StructureContainer bestContainer = default(StructureContainer);
-
-            foreach (StructureContainer strucCont in go)
+            using (Mutex m = new Mutex(false, StoryRecognizer.FinishedComputeMutexName))
             {
-                if (!bestContainer.Equals(default(StructureContainer)))
-                    bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
-                else
-                    bestContainer = strucCont;
-            }
+                //CHANGE: Really wanted to use a spin-wait here, but not .net2
+                while (true)
+                {
+                    if (m.WaitOne())
+                    {
+                        int storyStructure = StoryRecognizer.Closeststructure;
 
-            for (int i = 0; i < 5; i++)
-            {
-                bestStructures.Add(StructureCreator(structure, storySoFar));
-            }
+                        lock (CentralStoryManager._currentStory)
+                        {
+                            CentralStoryManager._currentStory = StructureLibrary.StoryStructures[storyStructure];
+                        }
 
-            if(!_shouldStop)
-                CentralStoryManager.newStory++;*/
+                        m.ReleaseMutex();
+                    }
+                    //CHANGE: If we are to incorporate multithreading here we should use a thread-pool.
+                    //Relevant code ends here (This is part of the old system which will be improved after this exam).
+
+                    /*List<StorySegment> bestStructures = new List<StorySegment>();
+
+                    StructureContainer bestContainer = default(StructureContainer);
+
+                    foreach (StructureContainer strucCont in go)
+                    {
+                        if (!bestContainer.Equals(default(StructureContainer)))
+                            bestContainer = (bestContainer.Fitness > strucCont.Fitness) ? bestContainer : strucCont;
+                        else
+                            bestContainer = strucCont;
+                    }
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        bestStructures.Add(StructureCreator(structure, storySoFar));
+                    }
+
+                    if(!_shouldStop)
+                        CentralStoryManager.newStory++;*/
+                }
+            }
         }
     }
 
